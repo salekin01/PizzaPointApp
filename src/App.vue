@@ -4,16 +4,10 @@
         <!--side navbar-->
         <v-navigation-drawer v-model="sideNav" temporary>
             <v-list>
-                <v-list-item-group v-model="group">
+                <v-list-item-group v-model="group" v-for="item in menuItems" :key="item.title">
                     <v-list-item>
-                        <v-icon role="img">mdi-pizza</v-icon>
-                        Pizza
-                    </v-list-item>
-                </v-list-item-group>
-                <v-list-item-group>
-                    <v-list-item>
-                        <v-icon role="img">mdi-dice-5</v-icon>
-                        Ingredient
+                        <v-icon role="img">{{item.icon}}</v-icon>
+                        <v-list-item-title>{{item.title}}</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
@@ -28,13 +22,9 @@
             <v-toolbar-title>PizzaPoint</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-xs-only">
-                <v-btn>
-                    <v-icon role="img">mdi-pizza</v-icon>
-                    Pizza
-                </v-btn>
-                <v-btn>
-                    <v-icon role="img">mdi-dice-5</v-icon>
-                    Ingredient
+                <v-btn text v-for="item in menuItems" :key="item.title">
+                    <v-icon role="img">{{item.icon}}</v-icon>
+                    {{item.title}}
                 </v-btn>
             </v-toolbar-items>
         </v-app-bar>
@@ -51,13 +41,16 @@
 
     export default {
         name: 'App',
-
         components: {
             //HelloWorld,
         },
 
         data: () => ({
             sideNav: false,
+            menuItems: [
+                { icon: 'mdi-pizza', title: 'Pizza'},
+                { icon: 'mdi-dice-5', title: 'Ingredient'}
+            ],
             icon: {
                 mdiMenu
             },
