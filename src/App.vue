@@ -1,5 +1,4 @@
 <template>
-
     <v-app>
         <!--side navbar-->
         <v-navigation-drawer v-model="sideNav" absolute temporary>
@@ -15,7 +14,7 @@
         </v-navigation-drawer>
 
         <!--navbar-->
-        <v-app-bar app dense dark class="red">
+        <v-app-bar app dense dark class="deep-orange accent-2">
             <v-app-bar-nav-icon @click="sideNav = true" class="hidden-sm-and-up">
                 <v-icon role="img">mdi-menu</v-icon>
             </v-app-bar-nav-icon>
@@ -36,12 +35,15 @@
         </v-app-bar>
 
         <v-main>
-            <v-container fluid>
-                <router-view></router-view>
+            <v-container fluid >
+                <div background-color="light-blue">
+                    <router-view></router-view>
+                </div>
+
             </v-container>
         </v-main>
 
-        <v-footer app class="red">
+        <v-footer app class="deep-orange accent-2">
             <v-row justify="center">
                 <v-btn
                         v-for="item in footerItems" :key="item.title"
@@ -57,7 +59,6 @@
             </v-row>
         </v-footer>
     </v-app>
-
 </template>
 
 <script>
@@ -74,7 +75,8 @@
             sideNav: false,
             menuItems: [
                 {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
-                {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'}
+                {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'},
+                {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'}
             ],
             footerItems: [
                 {icon: 'mdi-emoticon-happy-outline', title: 'About Us', link: '/AboutUs'},
@@ -88,5 +90,4 @@
         }),
     };
 </script>
-
 

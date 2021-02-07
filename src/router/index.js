@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Pizza from '../views/Pizza.vue'
 import IngredientDetail from '../views/IngredientDetail.vue'
+import Baker from '../views/Baker.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ContactUs from '../views/ContactUs.vue'
 
@@ -32,6 +33,11 @@ const routes = [
         path: '/IngredientDetail',
         name: 'IngredientDetail',
         component: IngredientDetail
+    },
+    {
+        path: '/Baker',
+        name: 'Baker',
+        component: Baker
     },
     {
         path: '/AboutUs',
