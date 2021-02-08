@@ -7,7 +7,6 @@ import Baker from '../views/Baker.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ContactUs from '../views/ContactUs.vue'
 import SignIn from '../views/SignIn.vue'
-import SignUpBaker from '../views/SignUpBaker.vue'
 import SignUpUser from '../views/SignUpUser.vue'
 import Customer from '../views/Customer.vue'
 import Supplier from '../views/Supplier.vue'
@@ -46,7 +45,7 @@ const routes = [
     },
     {
         path: '/IngredientDetail',
-        name: 'IngredientDetail',
+        name: 'Ingredient-Detail',
         component: IngredientDetail,
         beforeEnter: AuthGuard
         //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
@@ -79,13 +78,6 @@ const routes = [
         path: '/SignIn',
         name: 'Sign In',
         component: SignIn
-    },
-    {
-        path: '/SignUpBaker',
-        name: 'Sign-Up',
-        component: SignUpBaker,
-        beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {
         path: '/SignUpUser',

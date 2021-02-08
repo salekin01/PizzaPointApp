@@ -41,7 +41,7 @@
                                             md="4"
                                     >
                                         <v-text-field
-                                                v-model="editedItem.supplierName"
+                                                v-model="editedItem.ingredientName"
                                                 label="Name"
                                         ></v-text-field>
                                     </v-col>
@@ -50,50 +50,14 @@
                                             sm="6"
                                             md="4"
                                     >
-                                        <v-text-field
-                                                v-model="editedItem.address"
-                                                label="Address"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.city"
-                                                label="City"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.postalCode"
-                                                label="Postal Code"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.phone"
-                                                label="Phone"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.email"
-                                                label="Email"
-                                        ></v-text-field>
+                                        <v-select
+                                                :items="ingredientCategoryItems"
+                                                item-text="categoryName"
+                                                item-value="ingredientCategoryId"
+                                                v-model="editedItem.ingredientCategoryId"
+                                                label="Category"
+                                                dense
+                                        ></v-select>
                                     </v-col>
                                     <v-col
                                             cols="12"
@@ -101,11 +65,11 @@
                                             md="4"
                                     >
                                         <v-select
-                                                :items="hiddenItems"
-                                                item-text="text"
-                                                item-value="value"
-                                                v-model="editedItem.hidden"
-                                                label="Hidden"
+                                                :items="regionalProvinceItems"
+                                                item-text="regionalProvinceName"
+                                                item-value="regionalProvinceId"
+                                                v-model="editedItem.regionalProvinceId"
+                                                label="Province"
                                                 dense
                                         ></v-select>
                                     </v-col>
@@ -185,52 +149,42 @@
                     sortable: true,
                     value: 'ingredientName'
                 },
-                {text: 'Address', value: 'address'},
-                {text: 'City', value: 'city'},
-                {text: 'Postal Code', value: 'postalCode'},
-                {text: 'Phone', value: 'phone'},
-                {text: 'Email', value: 'email'},
-                {text: 'Hidden', value: 'hidden'},
+                {text: 'Category', value: 'ingredientCategoryName'},
+                {text: 'Regional-Province', value: 'regionalProvinceName'},
                 {text: 'Created Date', value: 'createdDate'},
                 {text: 'Updated Date', value: 'updatedDate'},
                 {text: 'Actions', value: 'actions', sortable: false},
             ],
-            hiddenItems: [{
-                text: "TRUE",
-                value: true
-            },
-                {
-                    text: "FALSE",
-                    value: false
-                }],
+            ingredientCategoryItems: [],
+            regionalProvinceItems: [],
             ingredientList: [],
             editedIndex: -1,
             editedItem: {
-                supplierId: 0,
-                supplierName: '',
-                address: '',
-                city: '',
-                postalCode: 0,
-                phone: '',
-                email: '',
-                hidden: false
+                ingredientId: 0,
+                ingredientName: '',
+                ingredientCategoryId: 0,
+                regionalProvinceId: 0,
+                createdDate: '',
+                updatedDate: '',
+                ingredientCategoryName: '',
+                regionalProvinceName: ''
             },
             defaultItem: {
-                supplierId: 0,
-                supplierName: '',
-                address: '',
-                city: '',
-                postalCode: 0,
-                phone: '',
-                email: '',
-                hidden: false
-            },
+                ingredientId: 0,
+                ingredientName: '',
+                ingredientCategoryId: 0,
+                regionalProvinceId: 0,
+                createdDate: '',
+                updatedDate: '',
+                ingredientCategoryName: '',
+                regionalProvinceName: ''
+            }
         }),
 
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? 'New Supplier' : 'Edit Supplier'
-            },
+                return this.editedIndex === -1 ? 'New Ingredient' : 'Edit Ingredient'
+            }
         },
 
         watch: {
@@ -248,14 +202,16 @@
 
         methods: {
             initialize() {
-                this.getSupplierList()
+                this.getIngredientList(),
+                this.ingredientCategoryItemsDD(),
+                this.regionalProvinceItemsDD()
             },
 
-            getSupplierList() {
+            getIngredientList() {
                 http
-                    .get("/supplier")
+                    .get("/ingredientDetail")
                     .then(response => {
-                        this.supplierList = response.data; // JSON are parsed automatically.
+                        this.ingredientList = response.data; // JSON are parsed automatically.
                         console.log(response.data);
                     })
                     .catch(e => {
@@ -265,25 +221,25 @@
 
             editItem(item) {
                 console.log(item);
-                this.editedIndex = this.supplierList.indexOf(item)
+                this.editedIndex = this.ingredientList.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.dialog = true
             },
 
             deleteItem(item) {
-                this.editedIndex = this.supplierList.indexOf(item)
+                this.editedIndex = this.ingredientList.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.dialogDelete = true
             },
 
             deleteItemConfirm() {
                 http
-                    .delete("/supplier/" + this.editedItem.supplierId)
+                    .delete("/ingredientDetail/" + this.editedItem.ingredientId)
                     .then(response => {
                         var result = response.data;
                         if (result == 1) {
-                            //this.supplierList.splice(this.editedIndex, 1)
-                            this.getSupplierList();
+                            //this.ingredientList.splice(this.editedIndex, 1)
+                            this.getIngredientList();
                         }
                     })
                     .catch(e => {
@@ -311,13 +267,13 @@
             save() {
                 //edit item
                 if (this.editedIndex > -1) {
-                    //Object.assign(this.supplierList[this.editedIndex], this.editedItem);
+                    //Object.assign(this.ingredientList[this.editedIndex], this.editedItem);
                     http
-                        .post("/supplier/" + this.editedItem.supplierId, this.editedItem)
+                        .post("/ingredientDetail/" + this.editedItem.ingredientId, this.editedItem)
                         .then(response => {
                             var result = response.data;
                             if (result == 1) {
-                                this.getSupplierList();
+                                this.getIngredientList();
                             }
                         })
                         .catch(e => {
@@ -326,13 +282,13 @@
                 }
                 //new item
                 else {
-                    //this.supplierList.push(this.editedItem);
+                    //this.ingredientList.push(this.editedItem);
                     http
-                        .post("/supplier", this.editedItem)
+                        .post("/ingredientDetail", this.editedItem)
                         .then(response => {
                             var result = response.data;
                             if (result == 1) {
-                                this.getSupplierList();
+                                this.getIngredientList();
                             }
                         })
                         .catch(e => {
@@ -341,6 +297,28 @@
                 }
                 this.close()
             },
+            ingredientCategoryItemsDD() {
+                http
+                    .get("/ingredientCategory")
+                    .then(response => {
+                        this.ingredientCategoryItems = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            regionalProvinceItemsDD() {
+                http
+                    .get("/regionalProvince")
+                    .then(response => {
+                        this.regionalProvinceItems = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            }
         },
     }
 </script>

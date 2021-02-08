@@ -100,9 +100,9 @@
                     menuItems = [
                         {icon: 'mdi-account-group', title: 'Supplier', link: '/Supplier'},
                         {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
-                        {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'},
-                        {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},
-                        {icon: 'mdi-face-recognition', title: 'SignUp-Baker', link: '/SignUpBaker'}  //may be we don't need
+                        {icon: 'mdi-dice-5', title: 'Ingredient-Detail', link: '/IngredientDetail'},
+                        {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'}
+                        //{icon: 'mdi-arrow-decision-outline', title: 'Ingredient Detail', link: '/IngredientDetail'}
                     ]
                 }
                 if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 1 == Customer
