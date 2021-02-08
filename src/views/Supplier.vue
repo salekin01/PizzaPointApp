@@ -1,8 +1,8 @@
 <template>
     <v-data-table
             :headers="headers"
-            :items="bakerList"
-            sort-by="bakerId"
+            :items="supplierList"
+            sort-by="supplierId"
             sortDesc
             class="elevation-1"
     >
@@ -41,7 +41,7 @@
                                             md="4"
                                     >
                                         <v-text-field
-                                                v-model="editedItem.bakerName"
+                                                v-model="editedItem.supplierName"
                                                 label="Name"
                                         ></v-text-field>
                                     </v-col>
@@ -53,6 +53,26 @@
                                         <v-text-field
                                                 v-model="editedItem.address"
                                                 label="Address"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                    >
+                                        <v-text-field
+                                                v-model="editedItem.city"
+                                                label="City"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                    >
+                                        <v-text-field
+                                                v-model="editedItem.postalCode"
+                                                label="Postal Code"
                                         ></v-text-field>
                                     </v-col>
                                     <v-col
@@ -73,6 +93,16 @@
                                         <v-text-field
                                                 v-model="editedItem.email"
                                                 label="Email"
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                    >
+                                        <v-text-field
+                                                v-model="editedItem.hidden"
+                                                label="Hidden"
                                         ></v-text-field>
                                     </v-col>
                                 </v-row>
@@ -149,41 +179,45 @@
                     text: 'Name',
                     align: 'start',
                     sortable: true,
-                    value: 'bakerName',
-                    required: true
+                    value: 'supplierName'
                 },
                 {text: 'Address', value: 'address'},
+                {text: 'City', value: 'city'},
+                {text: 'Postal Code', value: 'postalCode'},
                 {text: 'Phone', value: 'phone'},
                 {text: 'Email', value: 'email'},
+                {text: 'Hidden', value: 'hidden'},
                 {text: 'Created Date', value: 'createdDate'},
                 {text: 'Updated Date', value: 'updatedDate'},
                 {text: 'Actions', value: 'actions', sortable: false},
             ],
-            bakerList: [],
+            supplierList: [],
             editedIndex: -1,
             editedItem: {
-                bakerId: 0,
-                bakerName: '',
+                supplierId: 0,
+                supplierName: '',
                 address: '',
+                city: '',
+                postalCode: 0,
                 phone: '',
                 email: '',
-                createdDate: '',
-                updatedDate: ''
+                hidden: false
             },
             defaultItem: {
-                bakerId: 0,
-                bakerName: '',
+                supplierId: 0,
+                supplierName: '',
                 address: '',
+                city: '',
+                postalCode: 0,
                 phone: '',
                 email: '',
-                createdDate: '',
-                updatedDate: ''
+                hidden: false
             },
         }),
 
         computed: {
             formTitle() {
-                return this.editedIndex === -1 ? 'New Baker' : 'Edit Baker'
+                return this.editedIndex === -1 ? 'New Supplier' : 'Edit Supplier'
             },
         },
 
@@ -202,14 +236,14 @@
 
         methods: {
             initialize() {
-                this.getBakerList()
+                this.getSupplierList()
             },
 
-            getBakerList() {
+            getSupplierList() {
                 http
-                    .get("/baker")
+                    .get("/supplier")
                     .then(response => {
-                        this.bakerList = response.data; // JSON are parsed automatically.
+                        this.supplierList = response.data; // JSON are parsed automatically.
                         console.log(response.data);
                     })
                     .catch(e => {
@@ -219,25 +253,25 @@
 
             editItem(item) {
                 console.log(item);
-                this.editedIndex = this.bakerList.indexOf(item)
+                this.editedIndex = this.supplierList.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.dialog = true
             },
 
             deleteItem(item) {
-                this.editedIndex = this.bakerList.indexOf(item)
+                this.editedIndex = this.supplierList.indexOf(item)
                 this.editedItem = Object.assign({}, item)
                 this.dialogDelete = true
             },
 
-            async deleteItemConfirm() {
-                await http
-                    .delete("/baker/" + this.editedItem.bakerId)
+            deleteItemConfirm() {
+                http
+                    .delete("/supplier/" + this.editedItem.supplierId)
                     .then(response => {
                         var result = response.data;
                         if (result == 1) {
-                            //this.bakerList.splice(this.editedIndex, 1)
-                            this.getBakerList();
+                            //this.supplierList.splice(this.editedIndex, 1)
+                            this.getSupplierList();
                         }
                     })
                     .catch(e => {
@@ -265,13 +299,13 @@
             save() {
                 //edit item
                 if (this.editedIndex > -1) {
-                    //Object.assign(this.bakerList[this.editedIndex], this.editedItem)
+                    //Object.assign(this.supplierList[this.editedIndex], this.editedItem);
                     http
-                        .post("/baker/" + this.editedItem.bakerId, this.editedItem)
+                        .post("/supplier/" + this.editedItem.supplierId, this.editedItem)
                         .then(response => {
                             var result = response.data;
                             if (result == 1) {
-                                this.getBakerList();
+                                this.getSupplierList();
                             }
                         })
                         .catch(e => {
@@ -280,13 +314,13 @@
                 }
                 //new item
                 else {
-                    //this.bakerList.push(this.editedItem)
+                    //this.supplierList.push(this.editedItem);
                     http
-                        .post("/baker", this.editedItem)
+                        .post("/supplier", this.editedItem)
                         .then(response => {
                             var result = response.data;
                             if (result == 1) {
-                                this.getBakerList();
+                                this.getSupplierList();
                             }
                         })
                         .catch(e => {

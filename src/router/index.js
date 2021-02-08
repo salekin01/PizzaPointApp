@@ -10,6 +10,7 @@ import SignIn from '../views/SignIn.vue'
 import SignUpBaker from '../views/SignUpBaker.vue'
 import SignUpUser from '../views/SignUpUser.vue'
 import Customer from '../views/Customer.vue'
+import Supplier from '../views/Supplier.vue'
 import AuthGuard from '../router/auth-guard.js'
 //import {store} from '@/store/index';
 
@@ -35,6 +36,13 @@ const routes = [
         component: Pizza,
         beforeEnter: AuthGuard
         //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
+    },
+    {
+        path: '/Supplier',
+        name: 'Supplier',
+        component: Supplier,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/IngredientDetail',
