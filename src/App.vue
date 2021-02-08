@@ -96,12 +96,17 @@
                     {icon: 'mdi-face-recognition', title: 'Sign Up', link: '/SignUpUser'},
                     {icon: 'mdi-login', title: 'Sign In', link: '/SignIn'}
                 ]
-                if (this.userIsAuthenticated) {
+                if (this.userIsAuthenticated && this.$store.getters.user.roleId == 1) {        //roleId == 1 == Baker
                     menuItems = [
                         {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
                         {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'},
                         {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},
                         {icon: 'mdi-face-agent', title: 'SignUp-Baker', link: '/SignUpBaker'}
+                    ]
+                }
+                if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 1 == Customer
+                    menuItems = [
+                        {icon: 'mdi-account', title: 'Profile', link: '/Customer'}
                     ]
                 }
                 return menuItems
@@ -119,7 +124,8 @@
         },
         methods: {
             onLogout () {
-                this.$store.dispatch('logout')
+                this.$store.dispatch('logout');
+                this.$router.push('/').catch(()=>{});
             }
         }
     };

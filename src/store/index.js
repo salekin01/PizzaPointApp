@@ -26,19 +26,27 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
-        signUserIn({commit}, payload) {
+        signUserUp ({commit}, payload) {
             commit('setLoading', true)
             commit('clearError')
             http
-                .post("/SignIn", payload) //(payload.email, payload.password)
+                .post("/customer", payload)
                 .then(
                     user => {
                         commit('setLoading', false)
-                        const newUser = {
-                            id: user.data.roleId  //user.uid
+                        if(user != null && user.data == 1){
+                            const newUser1 = {
+                                email: payload.email,
+                                roleId: 2   //customer roleId
+                            }
+                            commit('setUser', newUser1)
                         }
-                        commit('setUser', newUser)
-                        console.log(newUser);
+                        else{
+                            const newUser = {
+                                roleId: user.uid,
+                            }
+                            commit('setUser', newUser)
+                        }
                     }
                 )
                 .catch(
@@ -49,6 +57,32 @@ export const store = new Vuex.Store({
                     }
                 )
         },
+        signUserIn({commit}, payload) {
+            commit('setLoading', true)
+            commit('clearError')
+            http
+                .post("/SignIn", payload) //(payload.email, payload.password)
+                .then(
+                    user => {
+                        commit('setLoading', false)
+                        if(user != null && user.data != null && user.data.roleId > 0){     //above 0 indicates roleId
+                            const newUser1 = {
+                                email: payload.email,
+                                roleId: user.data.roleId
+                            }
+                            commit('setUser', newUser1)
+                        }
+                    }
+                )
+                .catch(
+                    error => {
+                        commit('setLoading', false)
+                        commit('setError', error)
+                        console.log(error)
+                    }
+                )
+        },
+
         logout ({commit}) {
             commit('setUser', null)
         }

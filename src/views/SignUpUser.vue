@@ -12,7 +12,7 @@
                                                 name="customerName"
                                                 label="Name"
                                                 id="customerName"
-                                                v-model="Customer.customerName"
+                                                v-model="customerName"
                                                 type="text"
                                                 required></v-text-field>
                                     </v-flex>
@@ -23,7 +23,7 @@
                                                 name="address"
                                                 label="Address"
                                                 id="address"
-                                                v-model="Customer.address"
+                                                v-model="address"
                                                 type="text"
                                                 required></v-text-field>
                                     </v-flex>
@@ -34,7 +34,7 @@
                                                 name="email"
                                                 label="Mail"
                                                 id="email"
-                                                v-model="Customer.email"
+                                                v-model="email"
                                                 type="email"
                                                 required></v-text-field>
                                     </v-flex>
@@ -45,7 +45,7 @@
                                                 name="phone"
                                                 label="Phone"
                                                 id="phone"
-                                                v-model="Customer.phone"
+                                                v-model="phone"
                                                 type="text"
                                         ></v-text-field>
                                     </v-flex>
@@ -56,7 +56,7 @@
                                                 name="shippingInfo"
                                                 label="Shipping Info"
                                                 id="shippingInfo"
-                                                v-model="Customer.shippingInfo"
+                                                v-model="shippingInfo"
                                                 type="text"
                                         ></v-text-field>
                                     </v-flex>
@@ -67,7 +67,7 @@
                                                 name="password"
                                                 label="Password"
                                                 id="password"
-                                                v-model="Customer.password"
+                                                v-model="password"
                                                 type="password"
                                                 required></v-text-field>
                                     </v-flex>
@@ -78,7 +78,7 @@
                                                 name="confirmPassword"
                                                 label="Confirm Password"
                                                 id="confirmPassword"
-                                                v-model="Customer.confirmPassword"
+                                                v-model="confirmPassword"
                                                 type="password"
                                                 :rules="[comparePasswords]"></v-text-field>
                                     </v-flex>
@@ -98,51 +98,49 @@
 </template>
 
 <script>
-    import http from "../http-common";
     export default {
-        data () {
+        data() {
             return {
-                Customer : {
-                    customerName: '',
-                    address: '',
-                    email: '',
-                    phone: '',
-                    password: '',
-                    confirmPassword: '',
-                    shippingInfo: ''
-                },
+                customerName: '',
+                address: '',
+                email: '',
+                phone: '',
+                password: '',
+                confirmPassword: '',
+                shippingInfo: ''
             }
         },
         computed: {
-            comparePasswords () {
-                return this.Customer.password !== this.Customer.confirmPassword ? 'Passwords do not match' : ''
+            comparePasswords() {
+                return this.password !== this.confirmPassword ? 'Passwords do not match' : ''
             }
-            // ,
-            // user () {
-            //     return this.$index.getters.user
-            // }
+            ,
+            user() {
+                return this.$store.getters.user
+            },
+            error() {
+                return this.$store.getters.error
+            },
+            loading() {
+                return this.$store.getters.loading
+            }
         },
         watch: {
-            user (value) {
+            user(value) {
                 if (value !== null && value !== undefined) {
                     this.$router.push('/')
                 }
             }
         },
         methods: {
-            onSignUp () {
-                http
-                    .post("/customer", this.Customer)
-                    .then(response => {
-                        var result = response.data;
-                        if (result == 1) {
-                            this.$router.push('/');
-                        }
-                    })
-                    .catch(e => {
-                        console.log(e);
-                    });
-                //this.$index.dispatch('signUserUp', {email: this.email, password: this.password})
+            onSignUp() {
+                this.$store.dispatch('signUserUp', {
+                    customerName: this.customerName, address: this.address,
+                    email: this.email, phone: this.phone, password: this.password,
+                    shippingInfo: this.shippingInfo
+                })
+                this.$router.push('/');
+                //this.$store.dispatch('signUserUp', {email: this.email, password: this.password})
             }
         }
     }

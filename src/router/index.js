@@ -11,6 +11,7 @@ import SignUpBaker from '../views/SignUpBaker.vue'
 import SignUpUser from '../views/SignUpUser.vue'
 import Customer from '../views/Customer.vue'
 import AuthGuard from '../router/auth-guard.js'
+//import {store} from '@/store/index';
 
 Vue.use(VueRouter)
 
@@ -33,28 +34,28 @@ const routes = [
         name: 'Pizza',
         component: Pizza,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true},
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {
         path: '/IngredientDetail',
         name: 'IngredientDetail',
         component: IngredientDetail,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false},
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/Baker',
         name: 'Baker',
         component: Baker,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false},
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/Customer',
         name: 'Customer',
         component: Customer,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true},
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {
         path: '/AboutUs',
@@ -76,6 +77,7 @@ const routes = [
         name: 'Sign-Up',
         component: SignUpBaker,
         beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {
         path: '/SignUpUser',
@@ -90,32 +92,56 @@ const router = new VueRouter({
     routes
 })
 
+// router.beforeEach((to, from, next) => {
+//     if (to.matched.some((record) => record.meta.requiresAuth)) {
+//         if (this.$store.getters.isAuthenticated) {
+//             next();
+//             return;
+//         }
+//         next("/login");
+//     } else {
+//         next();
+//     }
+// });
+//
+// router.beforeEach((to, from, next) => {
+//     if (to.matched.some((record) => record.meta.guest)) {
+//         if (this.$store.getters.isAuthenticated) {
+//             next("/posts");
+//             return;
+//         }
+//         next();
+//     } else {
+//         next();
+//     }
+// });
 
 // router.beforeEach((to, from, next) => {
 //     if(to.meta.requiresAuth) {
-//         const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
-//         if(!authUser) {  //(!authUser || !authUser.token)
-//             next({name:'SignIn'})
+//         if(store.getters.user == null || store.getters.user == undefined) {
+//             next('/');
+//             return;
 //         }
 //         else if(to.meta.adminAuth) {
-//             const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
-//             if(authUser.data.roleId === '1') {     //role_id 1 is Baker
-//                 next()
+//             if(store.user.roleId === '1') {     //role_id 1 is Baker
+//                 next();
+//                 return;
 //             }else {
-//                 next('/Customer')
+//                 next('/SignIn')
 //             }
 //         } else if(to.meta.customerAuth) {
-//             const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
-//             if(authUser.data.roleId === '2') {     //role_id 2 id Customer
-//                 next()
-//             }else {
-//                 console.log('Im in admin')
-//                 next('/Baker')
+//             if(store.user.roleId === '2') {     //role_id 2 id Customer
+//                 next('/Customer');
+//                 return;
+//             }
+//             else {
+//                 next('/SignIn');
 //             }
 //         }
 //     }else {
 //         next()
 //     }
 // })
+
 
 export default router
