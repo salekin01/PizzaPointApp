@@ -9,6 +9,11 @@
                         <v-icon role="img">{{item.icon}}</v-icon>
                         <v-list-item-title>{{item.title}}</v-list-item-title>
                     </v-list-item>
+                    <v-list-item v-if="userIsAuthenticated"
+                                 @click="onLogout">
+                        <v-icon role="img">mdi-exit-to-app</v-icon>
+                        <v-list-item-title>Logout</v-list-item-title>
+                    </v-list-item>
                 </v-list-item-group>
             </v-list>
         </v-navigation-drawer>
@@ -31,11 +36,18 @@
                     <v-icon role="img">{{item.icon}}</v-icon>
                     {{item.title}}
                 </v-btn>
+                <v-btn text
+                       v-if="userIsAuthenticated"
+                       @click="onLogout"
+                >
+                    <v-icon role="img">mdi-exit-to-app</v-icon>
+                    Logout
+                </v-btn>
             </v-toolbar-items>
         </v-app-bar>
 
         <v-main>
-            <v-container fluid >
+            <v-container fluid>
                 <div background-color="light-blue">
                     <router-view></router-view>
                 </div>
@@ -73,21 +85,43 @@
 
         data: () => ({
             sideNav: false,
-            menuItems: [
-                {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
-                {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'},
-                {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'}
-            ],
-            footerItems: [
-                {icon: 'mdi-emoticon-happy-outline', title: 'About Us', link: '/AboutUs'},
-                {icon: 'mdi-contactless-payment', title: 'Contact Us', link: '/ContactUs'}
-            ],
-
             icon: {
                 mdiMenu
             },
             group: null
         }),
+        computed: {
+            menuItems() {
+                let menuItems = [
+                    {icon: 'mdi-face-recognition', title: 'Sign Up', link: '/SignUpUser'},
+                    {icon: 'mdi-login', title: 'Sign In', link: '/SignIn'}
+                ]
+                if (this.userIsAuthenticated) {
+                    menuItems = [
+                        {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
+                        {icon: 'mdi-dice-5', title: 'Ingredient', link: '/IngredientDetail'},
+                        {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},
+                        {icon: 'mdi-face-agent', title: 'SignUp-Baker', link: '/SignUpBaker'}
+                    ]
+                }
+                return menuItems
+            },
+            footerItems() {
+                let footerItems = [
+                    {icon: 'mdi-emoticon-happy-outline', title: 'About Us', link: '/AboutUs'},
+                    {icon: 'mdi-contactless-payment', title: 'Contact Us', link: '/ContactUs'}
+                ]
+                return footerItems
+            },
+            userIsAuthenticated() {
+                return this.$store.getters.user !== null && this.$store.getters.user !== undefined
+            }
+        },
+        methods: {
+            onLogout () {
+                this.$store.dispatch('logout')
+            }
+        }
     };
 </script>
 

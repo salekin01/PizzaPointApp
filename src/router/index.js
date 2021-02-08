@@ -6,7 +6,11 @@ import IngredientDetail from '../views/IngredientDetail.vue'
 import Baker from '../views/Baker.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ContactUs from '../views/ContactUs.vue'
-
+import SignIn from '../views/SignIn.vue'
+import SignUpBaker from '../views/SignUpBaker.vue'
+import SignUpUser from '../views/SignUpUser.vue'
+import Customer from '../views/Customer.vue'
+import AuthGuard from '../router/auth-guard.js'
 
 Vue.use(VueRouter)
 
@@ -27,17 +31,30 @@ const routes = [
     {
         path: '/Pizza',
         name: 'Pizza',
-        component: Pizza
+        component: Pizza,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true},
     },
     {
         path: '/IngredientDetail',
         name: 'IngredientDetail',
-        component: IngredientDetail
+        component: IngredientDetail,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false},
     },
     {
         path: '/Baker',
         name: 'Baker',
-        component: Baker
+        component: Baker,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false},
+    },
+    {
+        path: '/Customer',
+        name: 'Customer',
+        component: Customer,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true},
     },
     {
         path: '/AboutUs',
@@ -48,13 +65,57 @@ const routes = [
         path: '/ContactUs',
         name: 'Contact Us',
         component: ContactUs
+    },
+    {
+        path: '/SignIn',
+        name: 'Sign In',
+        component: SignIn
+    },
+    {
+        path: '/SignUpBaker',
+        name: 'Sign-Up',
+        component: SignUpBaker,
+        beforeEnter: AuthGuard
+    },
+    {
+        path: '/SignUpUser',
+        name: 'Sign Up',
+        component: SignUpUser
     }
 ]
 
 const router = new VueRouter({
     mode: 'history',
-    base: process.env.BASE_URL,
+    //base: process.env.BASE_URL,
     routes
 })
+
+
+// router.beforeEach((to, from, next) => {
+//     if(to.meta.requiresAuth) {
+//         const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
+//         if(!authUser) {  //(!authUser || !authUser.token)
+//             next({name:'SignIn'})
+//         }
+//         else if(to.meta.adminAuth) {
+//             const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
+//             if(authUser.data.roleId === '1') {     //role_id 1 is Baker
+//                 next()
+//             }else {
+//                 next('/Customer')
+//             }
+//         } else if(to.meta.customerAuth) {
+//             const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
+//             if(authUser.data.roleId === '2') {     //role_id 2 id Customer
+//                 next()
+//             }else {
+//                 console.log('Im in admin')
+//                 next('/Baker')
+//             }
+//         }
+//     }else {
+//         next()
+//     }
+// })
 
 export default router
