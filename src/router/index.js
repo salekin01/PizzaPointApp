@@ -4,13 +4,17 @@ import Home from '../views/Home.vue'
 import Pizza from '../views/Pizza.vue'
 import IngredientDetail from '../views/IngredientDetail.vue'
 import Baker from '../views/Baker.vue'
+import BakerGoods from '../views/BakerGoods.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ContactUs from '../views/ContactUs.vue'
 import SignIn from '../views/SignIn.vue'
 import SignUpUser from '../views/SignUpUser.vue'
 import Customer from '../views/Customer.vue'
 import Supplier from '../views/Supplier.vue'
+import SupplierGoods from '../views/SupplierGoods.vue'
 import AuthGuard from '../router/auth-guard.js'
+
+
 //import {store} from '@/store/index';
 
 Vue.use(VueRouter)
@@ -34,14 +38,18 @@ const routes = [
         name: 'Pizza',
         component: Pizza,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {
         path: '/Supplier',
         name: 'Supplier',
         component: Supplier,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
+    },
+    {
+        path: '/SupplierGoods',
+        name: 'Supplier-Ingredients',
+        component: SupplierGoods,
+        beforeEnter: AuthGuard
     },
     {
         path: '/IngredientDetail',
@@ -54,6 +62,13 @@ const routes = [
         path: '/Baker',
         name: 'Baker',
         component: Baker,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
+    },
+    {
+        path: '/BakerGoods',
+        name: 'Baker-Ingred.',
+        component: BakerGoods,
         beforeEnter: AuthGuard
         //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },

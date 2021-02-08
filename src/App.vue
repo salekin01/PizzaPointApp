@@ -98,11 +98,15 @@
                 ]
                 if (this.userIsAuthenticated && this.$store.getters.user.roleId == 1) {        //roleId == 1 == Baker
                     menuItems = [
-                        {icon: 'mdi-account-group', title: 'Supplier', link: '/Supplier'},
-                        {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
                         {icon: 'mdi-dice-5', title: 'Ingredient-Detail', link: '/IngredientDetail'},
-                        {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'}
-                        //{icon: 'mdi-arrow-decision-outline', title: 'Ingredient Detail', link: '/IngredientDetail'}
+                        {icon: 'mdi-account-group', title: 'Supplier', link: '/Supplier'},
+                        {icon: 'mdi-arrow-decision-outline', title: 'Supplier-Ingred.', link: '/SupplierGoods'},
+                        {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},
+                        {icon: 'mdi-beaker-plus-outline', title: 'Baker-Ingred.', link: '/BakerGoods'},
+                        {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'}
+
+
+
                     ]
                 }
                 if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 1 == Customer
