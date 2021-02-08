@@ -100,10 +100,14 @@
                                             sm="6"
                                             md="4"
                                     >
-                                        <v-text-field
+                                        <v-select
+                                                :items="hiddenItems"
+                                                item-text="text"
+                                                item-value="value"
                                                 v-model="editedItem.hidden"
                                                 label="Hidden"
-                                        ></v-text-field>
+                                                dense
+                                        ></v-select>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -191,6 +195,14 @@
                 {text: 'Updated Date', value: 'updatedDate'},
                 {text: 'Actions', value: 'actions', sortable: false},
             ],
+            hiddenItems: [{
+                text: "TRUE",
+                value: true
+            },
+                {
+                    text: "FALSE",
+                    value: false
+                }],
             supplierList: [],
             editedIndex: -1,
             editedItem: {
