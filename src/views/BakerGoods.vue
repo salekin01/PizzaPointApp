@@ -1,0 +1,546 @@
+<template>
+    <div>
+        <div>
+            <h4 align="center"> Base Ingredient </h4>
+            <v-data-table
+                    :headers="headers"
+                    :items="mainList"
+                    sort-by="ingredientId"
+                    sortDesc
+                    class="elevation-1"
+            >
+                <template v-slot:top>
+                    <v-toolbar flat>
+                        <v-spacer></v-spacer>
+                        <v-dialog
+                                v-model="dialog"
+                                max-width="500px"
+                        >
+                            <!--add-->
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                        color="primary"
+                                        dark
+                                        class="mb-2"
+                                        v-bind="attrs"
+                                        v-on="on"
+                                >
+                                    +Add
+                                </v-btn>
+                            </template>
+
+                            <!--edit-->
+                            <v-card>
+                                <v-card-title>
+                                    <span class="headline">{{ formTitle }}</span>
+                                </v-card-title>
+
+                                <v-card-text>
+                                    <v-container>
+                                        <v-row>
+                                            <v-col
+                                                    no-gutters
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-select
+                                                        :items="provinceListItems"
+                                                        item-text="regionalProvinceName"
+                                                        item-value="regionalProvinceId"
+                                                        v-model="editedItem.regionalProvinceId"
+                                                        label="Regional-Province"
+                                                        dense
+                                                ></v-select>
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-select
+                                                        :items="ingredientListItems.filter(c => c.regionalProvinceId === editedItem.regionalProvinceId)"
+                                                        item-text="ingredientName"
+                                                        item-value="ingredientId"
+                                                        v-model="editedItem.ingredientId"
+                                                        label="Ingredient"
+                                                        dense
+                                                ></v-select>
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-text-field
+                                                        v-model="editedItem.quantityPerUnit"
+                                                        label="Quantity/Unit"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-text-field
+                                                        v-model="editedItem.unitPrice"
+                                                        label="Unit Price"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-text-field
+                                                        v-model="editedItem.unitsInStock"
+                                                        label="Units In Stock"
+                                                ></v-text-field>
+                                            </v-col>
+                                            <v-col
+                                                    cols="12"
+                                                    sm="6"
+                                                    md="4"
+                                            >
+                                                <v-select
+                                                        :items="hiddenItems"
+                                                        item-text="text"
+                                                        item-value="value"
+                                                        v-model="editedItem.hidden"
+                                                        label="Hide"
+                                                        dense
+                                                ></v-select>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                                </v-card-text>
+
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            @click="close"
+                                    >
+                                        Cancel
+                                    </v-btn>
+                                    <v-btn
+                                            color="blue darken-1"
+                                            text
+                                            @click="save"
+                                    >
+                                        Save
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog v-model="dialogDelete" max-width="500px">
+                            <v-card>
+                                <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                                    <v-spacer></v-spacer>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </v-toolbar>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                    <v-icon
+                            small
+                            class="mr-2"
+                            @click="editItem(item)"
+                    >
+                        mdi-pencil
+                    </v-icon>
+                    <v-icon
+                            small
+                            @click="deleteItem(item)"
+                    >
+                        mdi-delete
+                    </v-icon>
+                </template>
+                <template v-slot:no-data>
+                    <v-btn
+                            color="primary"
+                            @click="initialize"
+                    >
+                        Reset
+                    </v-btn>
+                </template>
+            </v-data-table>
+        </div>
+
+        <br/>  <!--2nd table-->
+
+        <div>
+            <h4 align="center" content="grey darken-1"> Restock Ingredient </h4>
+            <v-data-table
+                    v-model="selected"
+                    :headers="headers1"
+                    :items="supplierIngredientList"
+                    :single-select="singleSelect"
+                    :search="search"
+                    item-key="supplierGoodsId"
+                    show-select
+                    class="elevation-1"
+            >
+                <template v-slot:top>
+                    <v-col class="text-right">
+                        <v-btn
+                                color="primary"
+                                dark
+                                class="my-0"
+                                v-on:click="orderIngredientList"
+                        >
+                            +Order
+                        </v-btn>
+                    </v-col>
+                    <v-col class="text-right">
+                        <v-btn
+                                color="primary"
+                                dark
+                                class="mt-n6"
+                                v-on:click="reloadTable"
+                        >
+                            Reload
+                        </v-btn>
+                    </v-col>
+                    <v-col
+                            no-gutters
+                            cols="12"
+                            sm="6"
+                            md="4"
+                    >
+                        <v-switch
+                                v-model="singleSelect"
+                                label="Single select"
+                                class="my-n6 pa-0"
+                        ></v-switch>
+                        <v-text-field
+                                v-model="search"
+                                append-icon="mdi-magnify"
+                                label="Search"
+                                single-line
+                                hide-details
+                        ></v-text-field>
+                    </v-col>
+                </template>
+
+                <template v-slot:item.unitsInStock="props">
+                    <v-edit-dialog
+                            :return-value.sync="props.item.unitsInStock"
+                    >
+                        {{ props.item.unitsInStock }}
+                        <template v-slot:input>
+                            <v-text-field
+                                    v-model="props.item.unitsInStock"
+                                    :rules="[max25chars]"
+                                    label="Units To Order"
+                                    single-line
+                                    counter
+                            ></v-text-field>
+                        </template>
+                    </v-edit-dialog>
+                </template>
+            </v-data-table>
+        </div>
+    </div>
+</template>
+
+
+<script>
+    import http from "../http-common";
+
+    export default {
+        data: () => ({
+            dialog: false,
+            dialogDelete: false,
+            regionalProvinceIdSlected: null,
+            headers: [
+                {
+                    text: 'Ingredient',
+                    align: 'start',
+                    sortable: true,
+                    value: 'ingredientName'
+                },
+                {text: 'Regional-Province', value: 'regionalProvinceName'},
+                {text: 'Quantity/Unit', value: 'quantityPerUnit'},
+                {text: 'unit Price', value: 'unitPrice'},
+                {text: 'Units In Stock', value: 'unitsInStock'},
+                {text: 'Hide', value: 'hidden'},
+                {text: 'Created Date', value: 'createdDate'},
+                {text: 'Updated Date', value: 'updatedDate'},
+                {text: 'Actions', value: 'actions', sortable: false},
+            ],
+            hiddenItems: [{
+                text: "TRUE",
+                value: true
+            },
+                {
+                    text: "FALSE",
+                    value: false
+                }],
+            provinceListItems: [],
+            ingredientListItems: [],
+            mainList: [],
+            editedIndex: -1,
+            editedItem: {
+                bakerGoodsId: 0,
+                ingredientId: 0,
+                quantityPerUnit: 0,
+                unitPrice: 0.0,
+                unitsInStock: 0,
+                hidden: false,
+                createdDate: '',
+                updatedDate: '',
+                ingredientCategoryId: 0,
+                regionalProvinceId: 0,
+                ingredientName: '',
+                ingredientCategoryName: '',
+                regionalProvinceName: '',
+                requiredDate: ''
+            },
+            defaultItem: {
+                bakerGoodsId: 0,
+                ingredientId: 0,
+                quantityPerUnit: 0,
+                unitPrice: 0.0,
+                unitsInStock: 0,
+                hidden: false,
+                createdDate: '',
+                updatedDate: '',
+                ingredientCategoryId: 0,
+                regionalProvinceId: 0,
+                ingredientName: '',
+                ingredientCategoryName: '',
+                regionalProvinceName: '',
+                requiredDate: ''
+            },
+            //"2nd table"
+            headers1: [
+                {
+                    text: 'Supplier',
+                    align: 'start',
+                    sortable: true,
+                    value: 'supplierName',
+                },
+                {text: 'Ingredient', value: 'ingredientName'},
+                {text: 'Regional-Province', value: 'regionalProvinceName'},
+                {text: 'Quantity/Unit', value: 'quantityPerUnit'},
+                {text: 'unitPrice', value: 'unitPrice'},
+                {text: 'Units In Stock', value: 'unitsInStock'}
+            ],
+            search: '',
+            supplierIngredientList: [],
+            supplierListItems: [],
+            singleSelect: true,
+            selected: [],
+            max25chars: v => v.length <= 25 || 'Input too long!',
+            supplierId: 0,
+            supplierName: '',
+            supplierGoodsId: 0,
+            unitsInStock: 0,
+            ingredientId: 0,
+
+            singleIngred: '',
+            orderedId: ''
+        }),
+
+        computed: {
+            formTitle() {
+                return this.editedIndex === -1 ? 'New Baker-Ingredient' : 'Edit Baker-Ingredient'
+            }
+        },
+
+        watch: {
+            dialog(val) {
+                val || this.close()
+            },
+            dialogDelete(val) {
+                val || this.closeDelete()
+            },
+        },
+
+        created() {
+            this.initialize()
+        },
+
+        methods: {
+            initialize() {
+                this.getMainList(),
+                    this.provinceListItemsDD(),
+                    this.ingredientListItemsDD(),
+                    this.getSupplierList(),
+                    this.supplierListItemsDD()
+            },
+
+            getMainList() {
+                http
+                    .get("/bakerGoods")
+                    .then(response => {
+                        this.mainList = response.data; // JSON are parsed automatically.
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+
+            editItem(item) {
+                console.log(item);
+                this.editedIndex = this.mainList.indexOf(item)
+                this.editedItem = Object.assign({}, item)
+                this.dialog = true
+            },
+
+            deleteItem(item) {
+                this.editedIndex = this.mainList.indexOf(item)
+                this.editedItem = Object.assign({}, item)
+                this.dialogDelete = true
+            },
+
+            deleteItemConfirm() {
+                http
+                    .delete("/bakerGoods/" + this.editedItem.bakerGoodsId)
+                    .then(response => {
+                        var result = response.data;
+                        if (result == 1) {
+                            //this.mainList.splice(this.editedIndex, 1)
+                            this.getMainList();
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                this.closeDelete()
+            },
+
+            close() {
+                this.dialog = false
+                this.$nextTick(() => {
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
+                })
+            },
+
+            closeDelete() {
+                this.dialogDelete = false
+                this.$nextTick(() => {
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
+                })
+            },
+
+            save() {
+                //edit item
+                if (this.editedIndex > -1) {
+                    //Object.assign(this.mainList[this.editedIndex], this.editedItem);
+                    http
+                        .post("/bakerGoods/" + this.editedItem.bakerGoodsId, this.editedItem)
+                        .then(response => {
+                            var result = response.data;
+                            if (result == 1) {
+                                this.getMainList();
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+                //new item
+                else {
+                    //this.mainList.push(this.editedItem);
+                    http
+                        .post("/bakerGoods", this.editedItem)
+                        .then(response => {
+                            var result = response.data;
+                            if (result == 1) {
+                                this.getMainList();
+                            }
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+                this.close()
+            },
+            provinceListItemsDD() {
+                http
+                    .get("/regionalProvince")
+                    .then(response => {
+                        this.provinceListItems = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            ingredientListItemsDD() {
+                http
+                    .get("/ingredientDetail")
+                    .then(response => {
+                        this.ingredientListItems = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            //2nd table methods
+            getSupplierList() {
+                http
+                    .get("/supplierGoods")
+                    .then(response => {
+                        this.supplierIngredientList = response.data; // JSON are parsed automatically.
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            supplierListItemsDD() {
+                http
+                    .get("/supplier")
+                    .then(response => {
+                        this.supplierListItems = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            orderIngredientList() {
+                http
+                    .post("/orderIngredient")
+                    .then( response => {
+                        this.orderedId = response.data;
+                        this.orderIngredientDetailCreate();
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+            orderIngredientDetailCreate(){
+                var i = 0;
+                for (i = 0; i < this.selected.length; i++) {
+                    http
+                        .post("/orderIngredientDetailByOrderedId/"+this.orderedId, this.selected[i])
+                        .then(response => {
+                            var result = response.data;
+                            console.log(result);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            },
+            reloadTable(){
+                this.getMainList();
+                this.getSupplierList();
+            }
+        },
+    }
+</script>
