@@ -1,159 +1,161 @@
 <template>
-    <v-data-table
-            :headers="headers"
-            :items="mainList"
-            sort-by="ingredientId"
-            sortDesc
-            class="elevation-1"
-    >
-        <template v-slot:top>
-            <v-toolbar flat>
-                <v-spacer></v-spacer>
-                <v-dialog
-                        v-model="dialog"
-                        max-width="500px"
+    <v-col>
+        <v-data-table
+                :headers="headers"
+                :items="mainList"
+                sort-by="ingredientId"
+                sortDesc
+                class="elevation-1"
+        >
+            <template v-slot:top>
+                <v-toolbar flat>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                            v-model="dialog"
+                            max-width="500px"
+                    >
+                        <!--add-->
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                    color="primary"
+                                    dark
+                                    class="mb-2"
+                                    v-bind="attrs"
+                                    v-on="on"
+                            >
+                                +Add
+                            </v-btn>
+                        </template>
+
+                        <!--edit-->
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">{{ formTitle }}</span>
+                            </v-card-title>
+
+                            <v-card-text>
+                                <v-container>
+                                    <v-row>
+                                        <v-col
+                                                no-gutters
+                                                cols="12"
+                                                sm="6"
+                                                md="4"
+                                        >
+                                            <v-select
+                                                    :items="supplierListItems"
+                                                    item-text="supplierName"
+                                                    item-value="supplierId"
+                                                    v-model="editedItem.supplierId"
+                                                    label="Supplier"
+                                                    dense
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="4"
+                                        >
+                                            <v-select
+                                                    :items="ingredientListItems"
+                                                    item-text="ingredientName"
+                                                    item-value="ingredientId"
+                                                    v-model="editedItem.ingredientId"
+                                                    label="Ingredient"
+                                                    dense
+                                            ></v-select>
+                                        </v-col>
+                                        <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="4"
+                                        >
+                                            <v-text-field
+                                                    v-model="editedItem.quantityPerUnit"
+                                                    label="Quantity/Unit"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="4"
+                                        >
+                                            <v-text-field
+                                                    v-model="editedItem.unitPrice"
+                                                    label="Unit Price"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col
+                                                cols="12"
+                                                sm="6"
+                                                md="4"
+                                        >
+                                            <v-text-field
+                                                    v-model="editedItem.unitsInStock"
+                                                    label="Units In Stock"
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-card-text>
+
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                        color="blue darken-1"
+                                        text
+                                        @click="close"
+                                >
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                        color="blue darken-1"
+                                        text
+                                        @click="save"
+                                >
+                                    Save
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                    <v-dialog v-model="dialogDelete" max-width="500px">
+                        <v-card>
+                            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                                <v-spacer></v-spacer>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+                </v-toolbar>
+            </template>
+            <template v-slot:item.actions="{ item }">
+                <v-icon
+                        small
+                        class="mr-2"
+                        @click="editItem(item)"
                 >
-                    <!--add-->
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-btn
-                                color="primary"
-                                dark
-                                class="mb-2"
-                                v-bind="attrs"
-                                v-on="on"
-                        >
-                            +Add
-                        </v-btn>
-                    </template>
-
-                    <!--edit-->
-                    <v-card>
-                        <v-card-title>
-                            <span class="headline">{{ formTitle }}</span>
-                        </v-card-title>
-
-                        <v-card-text>
-                            <v-container>
-                                <v-row>
-                                    <v-col
-                                            no-gutters
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-select
-                                                :items="supplierListItems"
-                                                item-text="supplierName"
-                                                item-value="supplierId"
-                                                v-model="editedItem.supplierId"
-                                                label="Supplier"
-                                                dense
-                                        ></v-select>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-select
-                                                :items="ingredientListItems"
-                                                item-text="ingredientName"
-                                                item-value="ingredientId"
-                                                v-model="editedItem.ingredientId"
-                                                label="Ingredient"
-                                                dense
-                                        ></v-select>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.quantityPerUnit"
-                                                label="Quantity/Unit"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.unitPrice"
-                                                label="Unit Price"
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                    >
-                                        <v-text-field
-                                                v-model="editedItem.unitsInStock"
-                                                label="Units In Stock"
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-container>
-                        </v-card-text>
-
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                    color="blue darken-1"
-                                    text
-                                    @click="close"
-                            >
-                                Cancel
-                            </v-btn>
-                            <v-btn
-                                    color="blue darken-1"
-                                    text
-                                    @click="save"
-                            >
-                                Save
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-                <v-dialog v-model="dialogDelete" max-width="500px">
-                    <v-card>
-                        <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                            <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                            <v-spacer></v-spacer>
-                        </v-card-actions>
-                    </v-card>
-                </v-dialog>
-            </v-toolbar>
-        </template>
-        <template v-slot:item.actions="{ item }">
-            <v-icon
-                    small
-                    class="mr-2"
-                    @click="editItem(item)"
-            >
-                mdi-pencil
-            </v-icon>
-            <v-icon
-                    small
-                    @click="deleteItem(item)"
-            >
-                mdi-delete
-            </v-icon>
-        </template>
-        <template v-slot:no-data>
-            <v-btn
-                    color="primary"
-                    @click="initialize"
-            >
-                Reset
-            </v-btn>
-        </template>
-    </v-data-table>
+                    mdi-pencil
+                </v-icon>
+                <v-icon
+                        small
+                        @click="deleteItem(item)"
+                >
+                    mdi-delete
+                </v-icon>
+            </template>
+            <template v-slot:no-data>
+                <v-btn
+                        color="primary"
+                        @click="initialize"
+                >
+                    Reset
+                </v-btn>
+            </template>
+        </v-data-table>
+    </v-col>
 </template>
 
 <script>
@@ -168,16 +170,17 @@
                     text: 'Supplier',
                     align: 'start',
                     sortable: true,
-                    value: 'supplierName'
+                    value: 'supplierName',
+                    class: 'subtitle-1 font-weight-black'
                 },
-                {text: 'Ingredient', value: 'ingredientName' },
-                {text: 'Regional-Province', value: 'regionalProvinceName'},
-                {text: 'Quantity/Unit', value: 'quantityPerUnit'},
-                {text: 'unitPrice', value: 'unitPrice'},
-                {text: 'UnitsInStock', value: 'unitsInStock'},
-                {text: 'Created Date', value: 'createdDate'},
-                {text: 'Updated Date', value: 'updatedDate'},
-                {text: 'Actions', value: 'actions', sortable: false},
+                {text: 'Ingredient', value: 'ingredientName',class: 'subtitle-1 font-weight-black'},
+                {text: 'Regional-Province', value: 'regionalProvinceName', class: 'subtitle-1 font-weight-black'},
+                {text: 'Quantity/Unit', value: 'quantityPerUnit', class: 'subtitle-1 font-weight-black'},
+                {text: 'unitPrice', value: 'unitPrice', class: 'subtitle-1 font-weight-black'},
+                {text: 'UnitsInStock', value: 'unitsInStock', class: 'subtitle-1 font-weight-black'},
+                {text: 'Created Date', value: 'createdDate', class: 'subtitle-1 font-weight-black'},
+                {text: 'Updated Date', value: 'updatedDate', class: 'subtitle-1 font-weight-black'},
+                {text: 'Actions', value: 'actions', sortable: false, class:'subtitle-2 font-weight-black'},
             ],
             ingredientListItems: [],
             supplierListItems: [],
@@ -216,7 +219,8 @@
                 ingredientName: '',
                 ingredientCategoryName: '',
                 regionalProvinceName: ''
-            }
+            },
+            imageUrl1: "https://i.postimg.cc/sg0wrnDW/Pizza-Chicken4.jpg"
         }),
 
         computed: {
