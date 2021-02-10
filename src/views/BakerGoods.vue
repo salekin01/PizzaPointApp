@@ -518,6 +518,7 @@
                     .then( response => {
                         this.orderedId = response.data;
                         this.orderIngredientDetailCreate();
+                        this.reloadTable();
                     })
                     .catch(e => {
                         console.log(e);

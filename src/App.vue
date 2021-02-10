@@ -19,7 +19,7 @@
         </v-navigation-drawer>
 
         <!--navbar-->
-        <v-app-bar app dense dark class="deep-orange accent-2">
+        <v-app-bar app dark class="deep-orange accent-2" height="70">
             <v-app-bar-nav-icon @click="sideNav = true" class="hidden-sm-and-up">
                 <v-icon role="img">mdi-menu</v-icon>
             </v-app-bar-nav-icon>
@@ -55,7 +55,7 @@
             </v-container>
         </v-main>
 
-        <v-footer app class="deep-orange accent-2">
+        <v-footer app class="deep-orange accent-2" height="60">
             <v-row justify="center">
                 <v-btn
                         v-for="item in footerItems" :key="item.title"
