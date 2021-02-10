@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Pizza from '../views/Pizza.vue'
+import CustomerOrder from '../views/CustomerOrder.vue'
 import IngredientDetail from '../views/IngredientDetail.vue'
 import Baker from '../views/Baker.vue'
 import BakerGoods from '../views/BakerGoods.vue'
@@ -69,6 +70,13 @@ const routes = [
         path: '/BakerGoods',
         name: 'Baker-Ingred.',
         component: BakerGoods,
+        beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
+    },
+    {
+        path: '/CustomerOrder',
+        name: 'Customer Order',
+        component: CustomerOrder,
         beforeEnter: AuthGuard
         //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },

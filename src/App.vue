@@ -103,13 +103,11 @@
                         {icon: 'mdi-arrow-decision-outline', title: 'Supplier-Ingred.', link: '/SupplierGoods'},
                         {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},
                         {icon: 'mdi-beaker-plus-outline', title: 'Baker-Ingred.', link: '/BakerGoods'},
-                        {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'}
-
-
-
+                        {icon: 'mdi-pizza', title: 'Pizza', link: '/Pizza'},
+                        {icon: 'mdi-clipboard-list-outline', title: 'Customer-Order', link: '/CustomerOrder'}
                     ]
                 }
-                if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 1 == Customer
+                if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 2 == Customer
                     menuItems = [
                         {icon: 'mdi-account', title: 'Profile', link: '/Customer'}
                     ]
