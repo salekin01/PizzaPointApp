@@ -4,8 +4,8 @@
             <v-flex xs12 sm6 offset-sm3>
                 <v-flex class="orange lighten-3">
                     <v-col align="center">
-                        <h1>Sign-UP</h1>
-                        <v-icon role="img" x-large>mdi-account</v-icon>
+                        <h1>Sign-UP Baker</h1>
+                        <v-icon role="img" x-large>mdi-account-tie</v-icon>
                     </v-col>
                 </v-flex>
                 <v-card class="orange lighten-4">
@@ -15,10 +15,10 @@
                                 <v-layout row>
                                     <v-flex xs12>
                                         <v-text-field
-                                                name="customerName"
+                                                name="bakerName"
                                                 label="Name"
-                                                id="customerName"
-                                                v-model="customerName"
+                                                id="bakerName"
+                                                v-model="bakerName"
                                                 type="text"
                                                 required></v-text-field>
                                     </v-flex>
@@ -31,18 +31,7 @@
                                                 id="address"
                                                 v-model="address"
                                                 type="text"
-                                                required></v-text-field>
-                                    </v-flex>
-                                </v-layout>
-                                <v-layout row>
-                                    <v-flex xs12>
-                                        <v-text-field
-                                                name="email"
-                                                label="Mail"
-                                                id="email"
-                                                v-model="email"
-                                                type="email"
-                                                required></v-text-field>
+                                                ></v-text-field>
                                     </v-flex>
                                 </v-layout>
                                 <v-layout row>
@@ -59,12 +48,12 @@
                                 <v-layout row>
                                     <v-flex xs12>
                                         <v-text-field
-                                                name="shippingInfo"
-                                                label="Shipping Info"
-                                                id="shippingInfo"
-                                                v-model="shippingInfo"
-                                                type="text"
-                                        ></v-text-field>
+                                                name="email"
+                                                label="Mail"
+                                                id="email"
+                                                v-model="email"
+                                                type="email"
+                                                required></v-text-field>
                                     </v-flex>
                                 </v-layout>
                                 <v-layout row>
@@ -111,13 +100,12 @@
     export default {
         data() {
             return {
-                customerName: '',
+                bakerName: '',
                 address: '',
                 email: '',
                 phone: '',
                 password: '',
                 confirmPassword: '',
-                shippingInfo: ''
             }
         },
         computed: {
@@ -144,10 +132,9 @@
         },
         methods: {
             onSignUp() {
-                this.$store.dispatch('signUserUp', {
-                    customerName: this.customerName, address: this.address,
-                    email: this.email, phone: this.phone, password: this.password,
-                    shippingInfo: this.shippingInfo
+                this.$store.dispatch('signBakerUp', {
+                    bakerName: this.bakerName, address: this.address,
+                    phone: this.phone, email: this.email, password: this.password
                 })
                 this.$router.push('/');
                 //this.$store.dispatch('signUserUp', {email: this.email, password: this.password})

@@ -1,142 +1,146 @@
 <template>
-    <div>
+    <v-col>
         <div>
-            <h4 align="center"> Order List </h4>
-            <v-data-table
-                    :headers="headers"
-                    :items="mainList"
-                    sort-by="ingredientId"
-                    sortDesc
-                    class="elevation-1"
-            >
-                <template v-slot:top>
-                    <v-toolbar flat>
-                        <v-spacer></v-spacer>
-                        <v-dialog
-                                v-model="dialog"
-                                max-width="500px"
+            <div>
+                <h4 align="center"> Order List </h4>
+                <v-data-table
+                        :headers="headers"
+                        :items="mainList"
+                        sort-by="ingredientId"
+                        sortDesc
+                        class="elevation-5 orange lighten-5"
+                >
+                    <template v-slot:top>
+                        <v-toolbar class="orange lighten-4">
+                            <v-spacer></v-spacer>
+                            <v-dialog
+                                    v-model="dialog"
+                                    max-width="500px"
+                            >
+
+                                <!--edit-->
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">{{ formTitle }}</span>
+                                    </v-card-title>
+
+                                    <v-card-text>
+                                        <v-container>
+                                            <v-row>
+                                                <v-col
+                                                        cols="12"
+                                                        sm="6"
+                                                        md="4"
+                                                >
+                                                    <v-select
+                                                            :items="cancelItems"
+                                                            item-text="text"
+                                                            item-value="value"
+                                                            v-model="editedItem.canceled"
+                                                            label="Cancel"
+                                                            dense
+                                                    ></v-select>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-card-text>
+
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="close"
+                                        >
+                                            Cancel
+                                        </v-btn>
+                                        <v-btn
+                                                color="blue darken-1"
+                                                text
+                                                @click="save"
+                                        >
+                                            Save
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-toolbar>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                                small
+                                class="mr-2"
+                                @click="editItem(item)"
                         >
+                            mdi-pencil
+                        </v-icon>
+                        <v-icon
+                                small
+                                @click="showItem(item)"
+                        >
+                            mdi-eye-outline
+                        </v-icon>
+                    </template>
+                    <template v-slot:no-data>
+                        <v-btn
+                                color="primary"
+                                @click="initialize"
+                        >
+                            Reset
+                        </v-btn>
+                    </template>
+                </v-data-table>
+            </div>
 
-                            <!--edit-->
-                            <v-card>
-                                <v-card-title>
-                                    <span class="headline">{{ formTitle }}</span>
-                                </v-card-title>
+            <br/>  <!--2nd table-->
 
-                                <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                            <v-col
-                                                    cols="12"
-                                                    sm="6"
-                                                    md="4"
-                                            >
-                                                <v-select
-                                                        :items="cancelItems"
-                                                        item-text="text"
-                                                        item-value="value"
-                                                        v-model="editedItem.canceled"
-                                                        label="Cancel"
-                                                        dense
-                                                ></v-select>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                                </v-card-text>
-
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="close"
-                                    >
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn
-                                            color="blue darken-1"
-                                            text
-                                            @click="save"
-                                    >
-                                        Save
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                    <v-icon
-                            small
-                            class="mr-2"
-                            @click="editItem(item)"
-                    >
-                        mdi-pencil
-                    </v-icon>
-                    <v-icon
-                            small
-                            @click="showItem(item)"
-                    >
-                        mdi-eye-outline
-                    </v-icon>
-                </template>
-                <template v-slot:no-data>
-                    <v-btn
-                            color="primary"
-                            @click="initialize"
-                    >
-                        Reset
-                    </v-btn>
-                </template>
-            </v-data-table>
+            <div>
+                <h4 align="center" content="grey darken-1"> Selected Ingredient </h4>
+                <v-data-table
+                        :headers="headers1"
+                        :items="ingredientListofSpecificPizza"
+                        sort-by="orderPizzaDetailId"
+                        sortDesc
+                        class="elevation-5 orange lighten-5"
+                >
+                    <template v-slot:top>
+                        <v-toolbar class="orange lighten-4">
+                            <v-spacer></v-spacer>
+                            <v-dialog v-model="dialogDelete" max-width="500px">
+                                <v-card>
+                                    <v-card-title class="headline">Are you sure you want to delete this item?
+                                    </v-card-title>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                        <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                                        <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        </v-toolbar>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon
+                                small
+                                @click="deleteItem(item)"
+                        >
+                            mdi-delete
+                        </v-icon>
+                    </template>
+                    <template v-slot:no-data>
+                        <v-btn
+                                elevation="5"
+                                color="success"
+                                @click="initialize"
+                        >
+                            Reset
+                        </v-btn>
+                    </template>
+                </v-data-table>
+            </div>
         </div>
-
-        <br/>  <!--2nd table-->
-
-        <div>
-            <h4 align="center" content="grey darken-1"> Selected Ingredient </h4>
-            <v-data-table
-                    :headers="headers1"
-                    :items="ingredientListofSpecificPizza"
-                    sort-by="orderPizzaDetailId"
-                    sortDesc
-                    class="elevation-1"
-            >
-                <template v-slot:top>
-                    <v-toolbar flat>
-                        <v-spacer></v-spacer>
-                        <v-dialog v-model="dialogDelete" max-width="500px">
-                            <v-card>
-                                <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-                                <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                                    <v-spacer></v-spacer>
-                                </v-card-actions>
-                            </v-card>
-                        </v-dialog>
-                    </v-toolbar>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                    <v-icon
-                            small
-                            @click="deleteItem(item)"
-                    >
-                        mdi-delete
-                    </v-icon>
-                </template>
-                <template v-slot:no-data>
-                    <v-btn
-                            color="primary"
-                            @click="initialize"
-                    >
-                        Reset
-                    </v-btn>
-                </template>
-            </v-data-table>
-        </div>
-    </div>
+    </v-col>
 </template>
 
 
@@ -341,7 +345,7 @@
                 this.close()
             },
 
-            showItem(item){
+            showItem(item) {
                 this.orderPizzaDetailByOrderPizzaId(item.orderPizzaId);
             },
 

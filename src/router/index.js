@@ -5,6 +5,7 @@ import Pizza from '../views/Pizza.vue'
 import CustomerOrder from '../views/CustomerOrder.vue'
 import IngredientDetail from '../views/IngredientDetail.vue'
 import Baker from '../views/Baker.vue'
+import SignUpBaker from '../views/SignUpBaker.vue'
 import BakerGoods from '../views/BakerGoods.vue'
 import AboutUs from '../views/AboutUs.vue'
 import ContactUs from '../views/ContactUs.vue'
@@ -26,14 +27,14 @@ const routes = [
         name: 'Home',
         component: Home
     },
-    {
-        path: '/about',
-        name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    },
+    // {
+    //     path: '/about',
+    //     name: 'About',
+    //     // route level code-splitting
+    //     // this generates a separate chunk (about.[hash].js) for this route
+    //     // which is lazy-loaded when the route is visited.
+    //     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    // },
     {
         path: '/Pizza',
         name: 'Pizza',
@@ -57,21 +58,18 @@ const routes = [
         name: 'Ingredient-Detail',
         component: IngredientDetail,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/Baker',
         name: 'Baker',
         component: Baker,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/BakerGoods',
         name: 'Baker-Ingred.',
         component: BakerGoods,
         beforeEnter: AuthGuard
-        //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
     },
     {
         path: '/CustomerOrder',
@@ -85,6 +83,12 @@ const routes = [
         name: 'Customer',
         component: Customer,
         beforeEnter: AuthGuard
+        //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
+    },
+    {
+        path: '/SignUpBaker',
+        name: 'SignUp-Baker',
+        component: SignUpBaker
         //meta: { requiresAuth: true , adminAuth:false , customerAuth : true}
     },
     {

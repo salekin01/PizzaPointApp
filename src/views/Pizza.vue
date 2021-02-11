@@ -1,14 +1,14 @@
-
-    <template>
+<template>
+    <v-col>
         <v-data-table
                 :headers="headers"
                 :items="mainList"
                 sort-by="pizzaId"
                 sortDesc
-                class="elevation-1"
+                class="elevation-5 orange lighten-5"
         >
             <template v-slot:top>
-                <v-toolbar flat>
+                <v-toolbar class="orange lighten-4">
                     <v-spacer></v-spacer>
                     <v-dialog
                             v-model="dialog"
@@ -17,11 +17,12 @@
                         <!--add-->
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn
-                                    color="primary"
+                                    color="success"
                                     dark
                                     class="mb-2"
                                     v-bind="attrs"
                                     v-on="on"
+                                    elevation="5"
                             >
                                 +Add
                             </v-btn>
@@ -154,202 +155,204 @@
             </template>
             <template v-slot:no-data>
                 <v-btn
-                        color="primary"
+                        elevation="5"
+                        color="success"
                         @click="initialize"
                 >
                     Reset
                 </v-btn>
             </template>
         </v-data-table>
-    </template>
+    </v-col>
+</template>
 
-    <script>
-        import http from "../http-common";
+<script>
+    import http from "../http-common";
 
-        export default {
-            data: () => ({
-                dialog: false,
-                dialogDelete: false,
-                headers: [
-                    {
-                        text: 'Pizza',
-                        align: 'start',
-                        sortable: true,
-                        value: 'pizzaName',
-                        required: true,
-                        class: 'subtitle-2 font-weight-black'
-                    },
-                    {text: 'Size', value: 'sizeInText', class: 'body font-weight-black'},
-                    {text: 'Size (inch)', value: 'sizeInInch', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Slice', value: 'totalSlice', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Price', value: 'price', class: 'subtitle-2 font-weight-black'},
-                    {text: 'In Stock', value: 'inStock', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Image Url', value: 'imageUrl', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Description', value: 'description', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Created Date', value: 'createdDate', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Updated date', value: 'updated_date', class: 'subtitle-2 font-weight-black'},
-                    {text: 'Actions', value: 'actions', sortable: false, class: 'subtitle-2 font-weight-black'},
-                ],
-                mainList: [],
-                availablePizzaSize: [],
-                editedIndex: -1,
-                editedItem: {
-                    pizzaId: 0,
-                    pizzaName: '',
-                    pizzaSizeId: 0,
-                    price: 0.0,
-                    inStock: 0,
-                    createdDate: '',
-                    updatedDate: '',
-                    imageUrl: '',
-                    description: '',
-                    sizeInInch: 0,
-                    sizeInText: '',
-                    totalSlice: 0,
+    export default {
+        data: () => ({
+            dialog: false,
+            dialogDelete: false,
+            headers: [
+                {
+                    text: 'Pizza',
+                    align: 'start',
+                    sortable: true,
+                    value: 'pizzaName',
+                    required: true,
+                    class: 'subtitle-2 font-weight-black'
                 },
-                defaultItem: {
-                    pizzaId: 0,
-                    pizzaName: '',
-                    pizzaSizeId: 0,
-                    price: 0.0,
-                    inStock: 0,
-                    createdDate: '',
-                    updatedDate: '',
-                    imageUrl: '',
-                    description: '',
-                    sizeInInch: 0,
-                    sizeInText: '',
-                    totalSlice: 0,
-                },
-            }),
-
-            computed: {
-                formTitle() {
-                    return this.editedIndex === -1 ? 'New Pizza' : 'Edit Pizza'
-                },
+                {text: 'Size', value: 'sizeInText', class: 'body font-weight-black'},
+                {text: 'Size (inch)', value: 'sizeInInch', class: 'subtitle-2 font-weight-black'},
+                {text: 'Slice', value: 'totalSlice', class: 'subtitle-2 font-weight-black'},
+                {text: 'Price', value: 'price', class: 'subtitle-2 font-weight-black'},
+                {text: 'In Stock', value: 'inStock', class: 'subtitle-2 font-weight-black'},
+                {text: 'Image Url', value: 'imageUrl', class: 'subtitle-2 font-weight-black'},
+                {text: 'Description', value: 'description', class: 'subtitle-2 font-weight-black'},
+                {text: 'Created Date', value: 'createdDate', class: 'subtitle-2 font-weight-black'},
+                {text: 'Updated date', value: 'updated_date', class: 'subtitle-2 font-weight-black'},
+                {text: 'Actions', value: 'actions', sortable: false, class: 'subtitle-2 font-weight-black'},
+            ],
+            mainList: [],
+            availablePizzaSize: [],
+            editedIndex: -1,
+            editedItem: {
+                pizzaId: 0,
+                pizzaName: '',
+                pizzaSizeId: 0,
+                price: 0.0,
+                inStock: 0,
+                createdDate: '',
+                updatedDate: '',
+                imageUrl: '',
+                description: '',
+                sizeInInch: 0,
+                sizeInText: '',
+                totalSlice: 0,
             },
-
-            watch: {
-                dialog(val) {
-                    val || this.close()
-                },
-                dialogDelete(val) {
-                    val || this.closeDelete()
-                },
+            defaultItem: {
+                pizzaId: 0,
+                pizzaName: '',
+                pizzaSizeId: 0,
+                price: 0.0,
+                inStock: 0,
+                createdDate: '',
+                updatedDate: '',
+                imageUrl: '',
+                description: '',
+                sizeInInch: 0,
+                sizeInText: '',
+                totalSlice: 0,
             },
+        }),
 
-            created() {
-                this.initialize()
+        computed: {
+            formTitle() {
+                return this.editedIndex === -1 ? 'New Pizza' : 'Edit Pizza'
             },
+        },
 
-            methods: {
-                initialize() {
-                    this.getMainList(),
+        watch: {
+            dialog(val) {
+                val || this.close()
+            },
+            dialogDelete(val) {
+                val || this.closeDelete()
+            },
+        },
+
+        created() {
+            this.initialize()
+        },
+
+        methods: {
+            initialize() {
+                this.getMainList(),
                     this.getAvailablePizzaSize()
-                },
+            },
 
-                getMainList() {
+            getMainList() {
+                http
+                    .get("/pizza")
+                    .then(response => {
+                        this.mainList = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            },
+
+            editItem(item) {
+                console.log(item);
+                this.editedIndex = this.mainList.indexOf(item)
+                this.editedItem = Object.assign({}, item)
+                this.dialog = true
+            },
+
+            deleteItem(item) {
+                this.editedIndex = this.mainList.indexOf(item)
+                this.editedItem = Object.assign({}, item)
+                this.dialogDelete = true
+            },
+
+            async deleteItemConfirm() {
+                await http
+                    .delete("/pizza/" + this.editedItem.pizzaId)
+                    .then(response => {
+                        var result = response.data;
+                        if (result == 1) {
+                            //this.mainList.splice(this.editedIndex, 1)
+                            this.getMainList();
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                this.closeDelete()
+            },
+
+            close() {
+                this.dialog = false
+                this.$nextTick(() => {
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
+                })
+            },
+
+            closeDelete() {
+                this.dialogDelete = false
+                this.$nextTick(() => {
+                    this.editedItem = Object.assign({}, this.defaultItem)
+                    this.editedIndex = -1
+                })
+            },
+
+            save() {
+                //edit item
+                if (this.editedIndex > -1) {
+                    //Object.assign(this.mainList[this.editedIndex], this.editedItem)
                     http
-                        .get("/pizza")
-                        .then(response => {
-                            this.mainList = response.data;
-                            console.log(response.data);
-                        })
-                        .catch(e => {
-                            console.log(e);
-                        });
-                },
-
-                editItem(item) {
-                    console.log(item);
-                    this.editedIndex = this.mainList.indexOf(item)
-                    this.editedItem = Object.assign({}, item)
-                    this.dialog = true
-                },
-
-                deleteItem(item) {
-                    this.editedIndex = this.mainList.indexOf(item)
-                    this.editedItem = Object.assign({}, item)
-                    this.dialogDelete = true
-                },
-
-                async deleteItemConfirm() {
-                    await http
-                        .delete("/pizza/" + this.editedItem.pizzaId)
+                        .post("/pizza/" + this.editedItem.pizzaId, this.editedItem)
                         .then(response => {
                             var result = response.data;
                             if (result == 1) {
-                                //this.mainList.splice(this.editedIndex, 1)
                                 this.getMainList();
                             }
                         })
                         .catch(e => {
                             console.log(e);
                         });
-                    this.closeDelete()
-                },
-
-                close() {
-                    this.dialog = false
-                    this.$nextTick(() => {
-                        this.editedItem = Object.assign({}, this.defaultItem)
-                        this.editedIndex = -1
-                    })
-                },
-
-                closeDelete() {
-                    this.dialogDelete = false
-                    this.$nextTick(() => {
-                        this.editedItem = Object.assign({}, this.defaultItem)
-                        this.editedIndex = -1
-                    })
-                },
-
-                save() {
-                    //edit item
-                    if (this.editedIndex > -1) {
-                        //Object.assign(this.mainList[this.editedIndex], this.editedItem)
-                        http
-                            .post("/pizza/" + this.editedItem.pizzaId, this.editedItem)
-                            .then(response => {
-                                var result = response.data;
-                                if (result == 1) {
-                                    this.getMainList();
-                                }
-                            })
-                            .catch(e => {
-                                console.log(e);
-                            });
-                    }
-                    //new item
-                    else {
-                        //this.mainList.push(this.editedItem)
-                        http
-                            .post("/pizza", this.editedItem)
-                            .then(response => {
-                                var result = response.data;
-                                if (result == 1) {
-                                    this.getMainList();
-                                }
-                            })
-                            .catch(e => {
-                                console.log(e);
-                            });
-                    }
-                    this.close()
-                },
-                getAvailablePizzaSize(){
+                }
+                //new item
+                else {
+                    //this.mainList.push(this.editedItem)
                     http
-                        .get("/pizzaSize")
+                        .post("/pizza", this.editedItem)
                         .then(response => {
-                            this.availablePizzaSize = response.data;
-                            console.log(response.data);
+                            var result = response.data;
+                            if (result == 1) {
+                                this.getMainList();
+                            }
                         })
                         .catch(e => {
                             console.log(e);
                         });
                 }
+                this.close()
             },
-        }
-    </script>
+            getAvailablePizzaSize() {
+                http
+                    .get("/pizzaSize")
+                    .then(response => {
+                        this.availablePizzaSize = response.data;
+                        console.log(response.data);
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            }
+        },
+    }
+</script>
 

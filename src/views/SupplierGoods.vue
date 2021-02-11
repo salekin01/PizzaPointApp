@@ -5,10 +5,10 @@
                 :items="mainList"
                 sort-by="ingredientId"
                 sortDesc
-                class="elevation-1"
+                class="elevation-5 orange lighten-5"
         >
             <template v-slot:top>
-                <v-toolbar flat>
+                <v-toolbar class="orange lighten-5">
                     <v-spacer></v-spacer>
                     <v-dialog
                             v-model="dialog"
@@ -148,7 +148,8 @@
             </template>
             <template v-slot:no-data>
                 <v-btn
-                        color="primary"
+                        elevation="5"
+                        color="success"
                         @click="initialize"
                 >
                     Reset

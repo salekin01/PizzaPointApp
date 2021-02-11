@@ -26,6 +26,37 @@ export const store = new Vuex.Store({
         }
     },
     actions: {
+        signBakerUp ({commit}, payload) {
+            commit('setLoading', true)
+            commit('clearError')
+            http
+                .post("/baker", payload)
+                .then(
+                    user => {
+                        commit('setLoading', false)
+                        if(user != null && user.data == 1){
+                            const newUser1 = {
+                                email: payload.email,
+                                roleId: 1   //baker roleId
+                            }
+                            commit('setUser', newUser1)
+                        }
+                        else{
+                            const newUser = {
+                                roleId: user.uid,
+                            }
+                            commit('setUser', newUser)
+                        }
+                    }
+                )
+                .catch(
+                    error => {
+                        commit('setLoading', false)
+                        commit('setError', error)
+                        console.log(error)
+                    }
+                )
+        },
         signUserUp ({commit}, payload) {
             commit('setLoading', true)
             commit('clearError')

@@ -7,7 +7,13 @@
         </v-layout>
         <v-layout row>
             <v-flex xs12 sm6 offset-sm3>
-                <v-card>
+                <v-flex class="orange lighten-3">
+                    <v-col align="center">
+                        <h1>Sign-In</h1>
+                        <v-icon role="img" x-large>mdi-lock-open-variant-outline</v-icon>
+                    </v-col>
+                </v-flex>
+                <v-card class="orange lighten-4">
                     <v-card-text>
                         <v-container>
                             <form @submit.prevent="onSignIn">
@@ -35,7 +41,12 @@
                                 </v-layout>
                                 <v-layout row>
                                     <v-flex xs12>
-                                        <v-btn type="submit">Sign In</v-btn>
+                                        <v-btn type="submit" block
+                                               large
+                                               outlined
+                                               elevation="2"
+                                               rounded class="orange lighten-5">Sign In
+                                        </v-btn>
                                     </v-flex>
                                 </v-layout>
                             </form>
@@ -75,10 +86,10 @@
             }
         },
         methods: {
-            onSignIn () {
+            onSignIn() {
                 this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
             },
-            onDismissed () {
+            onDismissed() {
                 this.$store.dispatch('clearError')
             }
         }

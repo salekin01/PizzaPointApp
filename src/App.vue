@@ -25,7 +25,7 @@
             </v-app-bar-nav-icon>
 
             <v-toolbar-title>
-                <router-link to="/" tag="span" style="cursor: pointer">PizzaPoint</router-link>
+                <router-link to="/" tag="span" style="cursor: pointer" > <h2>PizzaPoint</h2></router-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-xs-only">
@@ -93,12 +93,13 @@
         computed: {
             menuItems() {
                 let menuItems = [
+                    {icon: 'mdi-lock', title: 'Sign Up', link: '/SignUpBaker'},
                     {icon: 'mdi-face-agent', title: 'Sign Up', link: '/SignUpUser'},
                     {icon: 'mdi-login', title: 'Sign In', link: '/SignIn'}
                 ]
                 if (this.userIsAuthenticated && this.$store.getters.user.roleId == 1) {        //roleId == 1 == Baker
                     menuItems = [
-                        {icon: 'mdi-dice-5', title: 'Ingredient-Detail', link: '/IngredientDetail'},
+                        {icon: 'mdi-dice-5', title: 'Ingredients', link: '/IngredientDetail'},
                         {icon: 'mdi-account-group', title: 'Supplier', link: '/Supplier'},
                         {icon: 'mdi-arrow-decision-outline', title: 'Supplier-Ingred.', link: '/SupplierGoods'},
                         {icon: 'mdi-chef-hat', title: 'Baker', link: '/Baker'},

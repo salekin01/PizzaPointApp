@@ -111,19 +111,19 @@
                 ],
                 slides: [
                     {
-                        src: 'https://i.postimg.cc/XqNsD19h/pizza-Banner1.jpg',
+                        src: 'https://live.staticflickr.com/65535/50930441522_1fab10c24c_c.jpg',
                     },
                     {
-                        src: 'https://i.postimg.cc/sXTY1jZ6/pizzabanner5.png',
+                        src: 'https://live.staticflickr.com/65535/50929633398_2a78b61da5_c.jpg',
                     },
                     {
-                        src: 'https://i.postimg.cc/ZYfH5c8b/pizza-Banner3.png',
+                        src: 'https://live.staticflickr.com/65535/50930443172_81602e867c_c.jpg',
                     },
                     {
-                        src: 'https://i.postimg.cc/VvTXBKgX/pizzabanner6.jpg',
+                        src: 'https://live.staticflickr.com/65535/50930442817_b653dd48c8_c.jpg',
                     },
                     {
-                        src: 'https://i.postimg.cc/2SjBLRrg/pizza-Banner2.png',
+                        src: 'https://live.staticflickr.com/65535/50930443232_fd932a8937_c.jpg',
                     },
                 ],
                 selected: [],
