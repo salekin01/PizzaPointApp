@@ -8,7 +8,7 @@
                 class="elevation-5 orange lighten-5"
         >
             <template v-slot:top>
-                <v-toolbar class="orange lighten-5">
+                <v-toolbar class="orange lighten-4">
                     <v-spacer></v-spacer>
                     <v-dialog
                             v-model="dialog"
