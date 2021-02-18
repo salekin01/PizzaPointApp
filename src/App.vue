@@ -93,7 +93,7 @@
         computed: {
             menuItems() {
                 let menuItems = [
-                    {icon: 'mdi-lock', title: 'Sign Up', link: '/SignUpBaker'},
+                    {icon: 'mdi-lock', title: 'Sign-Up', link: '/SignUpBaker'},
                     {icon: 'mdi-face-agent', title: 'Sign Up', link: '/SignUpUser'},
                     {icon: 'mdi-login', title: 'Sign In', link: '/SignIn'}
                 ]
@@ -135,3 +135,14 @@
     };
 </script>
 
+<style>
+    .v-data-table > .v-data-table__wrapper > table > thead > tr > th{
+        font-size: 20px !important;
+    }
+    .v-data-table > .v-data-table__wrapper > table > tbody > tr > td{
+        font-size: 18px !important;
+    }
+    .v-data-table > .v-data-footer  {
+        font-size: 18px !important;
+    }
+</style>
