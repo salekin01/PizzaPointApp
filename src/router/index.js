@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Pizza from '../views/Pizza.vue'
 import CustomerOrder from '../views/CustomerOrder.vue'
+import PizzaOrder from '../views/PizzaOrder.vue'
 import IngredientDetail from '../views/IngredientDetail.vue'
 import Baker from '../views/Baker.vue'
 import SignUpBaker from '../views/SignUpBaker.vue'
@@ -77,6 +78,12 @@ const routes = [
         component: CustomerOrder,
         beforeEnter: AuthGuard
         //meta: { requiresAuth: true , adminAuth:true , customerAuth : false}
+    },
+    {
+        path: '/PizzaOrder',
+        name: 'Order',
+        component: PizzaOrder,
+        beforeEnter: AuthGuard
     },
     {
         path: '/Customer',

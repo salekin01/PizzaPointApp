@@ -64,26 +64,42 @@
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
+                            <v-dialog v-model="dialogReorder" max-width="550px">
+                                <v-card>
+                                    <v-card-title class="headline">Are you sure you want to reorder this item?</v-card-title>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="blue darken-1" text @click="closeReorder">Cancel</v-btn>
+                                        <v-btn color="blue darken-1" text @click="reorderItemConfirm">OK</v-btn>
+                                        <v-spacer></v-spacer>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </v-toolbar>
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon
-                                small
                                 class="mr-2"
                                 @click="editItem(item)"
                         >
                             mdi-pencil
                         </v-icon>
                         <v-icon
-                                small
+
                                 @click="showItem(item)"
                         >
                             mdi-eye-outline
                         </v-icon>
+                        <v-icon
+
+                                @click="reorderItem(item)"
+                        >
+                            mdi-plus-thick
+                        </v-icon>
                     </template>
                     <template v-slot:no-data>
                         <v-btn
-                                color="primary"
+                                color="success"
                                 @click="initialize"
                         >
                             Reset
@@ -120,14 +136,14 @@
                             </v-dialog>
                         </v-toolbar>
                     </template>
-                    <template v-slot:item.actions="{ item }">
+<!--                    <template v-slot:item.actions="{ item }">
                         <v-icon
                                 small
                                 @click="deleteItem(item)"
                         >
                             mdi-delete
                         </v-icon>
-                    </template>
+                    </template>-->
                     <template v-slot:no-data>
                         <v-btn
                                 elevation="5"
@@ -151,6 +167,7 @@
         data: () => ({
             dialog: false,
             dialogDelete: false,
+            dialogReorder: false,
             headers: [
                 {
                     text: 'Order Pizza Id',
@@ -164,7 +181,6 @@
                 {text: 'Size', value: 'sizeInText', class: 'subtitle-1 font-weight-black'},
                 {text: 'Slice', value: 'totalSlice', class: 'subtitle-1 font-weight-black'},
                 {text: 'Total Price', value: 'totalPrice', class: 'subtitle-1 font-weight-black'},
-                {text: 'Customer', value: 'customerName', class: 'subtitle-1 font-weight-black'},
                 {text: 'Email', value: 'email', class: 'subtitle-1 font-weight-black'},
                 {text: 'Phone', value: 'phone', class: 'subtitle-1 font-weight-black'},
                 {text: 'Order-Date', value: 'orderDate', class: 'subtitle-1 font-weight-black'},
@@ -228,6 +244,7 @@
 
                 orderPizzaDetailId: 0,
             },
+            reorderItemInfo: '',
             //"2nd table"
             headers1: [
                 {
@@ -240,7 +257,7 @@
                 {text: 'Ingredient', value: 'ingredientName', class: 'subtitle-1 font-weight-black'},
                 {text: 'Regional ProvinceNamee', value: 'regionalProvinceName', class: 'subtitle-1 font-weight-black'},
                 {text: 'Created-Date', value: 'createdDate', class: 'subtitle-1 font-weight-black'},
-                {text: 'Actions', value: 'actions', sortable: false, class: 'subtitle-1 font-weight-black'},
+                // {text: 'Actions', value: 'actions', sortable: false, class: 'subtitle-1 font-weight-black'},
             ],
             ingredientListofSpecificPizza: [],
         }),
@@ -258,6 +275,9 @@
             dialogDelete(val) {
                 val || this.closeDelete()
             },
+            dialogReorder(val) {
+                val || this.closeReorder()
+            },
         },
 
         created() {
@@ -271,7 +291,7 @@
 
             getMainList() {
                 http
-                    .get("/orderPizza")
+                    .get("/orderPizzaByCustomerEmail/" + this.$store.getters.user.email)
                     .then(response => {
                         this.mainList = response.data;
                         console.log(response.data);
@@ -293,10 +313,14 @@
                 this.editedItem = Object.assign({}, item)
                 this.dialogDelete = true
             },
+            reorderItem(item){
+                this.reorderItemInfo = item;
+                this.dialogReorder = true;
+            },
 
             deleteItemConfirm() {
                 http
-                    .delete("/orderPizzaDetail/" + this.editedItem.orderPizzaDetailId)
+                    .delete("/orderPizzaDetail/" + this.$store.getters.user.email)
                     .then(response => {
                         var result = response.data;
                         if (result == 1) {
@@ -324,6 +348,10 @@
                     this.editedItem = Object.assign({}, this.defaultItem)
                     this.editedIndex = -1
                 })
+            },
+
+            closeReorder() {
+                this.dialogReorder = false;
             },
 
             save() {
@@ -360,6 +388,40 @@
                         console.log(e);
                     });
             },
+            reorderItemConfirm() {
+                http
+                    .post("/orderPizza", this.reorderItemInfo)
+                    .then(async response => {
+                        this.orderPizzaId = await response.data;
+                        this.orderPizzaDetailCreate();
+                        this.reloadTable();
+                        this.message = 'Order has been placed successfully.'
+                        this.alert = true;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                this.closeReorder()
+            },
+            async orderPizzaDetailCreate() {
+                await this.orderPizzaDetailByOrderPizzaId(this.reorderItemInfo.orderPizzaId);
+                console.log("orderPizzaId: " + this.reorderItemInfo.orderPizzaId);
+                var i = 0;
+                for (i = 0; i < this.ingredientListofSpecificPizza.length; i++) {
+                    http
+                        .post("/orderPizzaDetailByOrderedId/" + this.orderPizzaId, this.ingredientListofSpecificPizza[i])
+                        .then(response => {
+                            var result = response.data;
+                            console.log(result);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            },
+            reloadTable() {
+                this.getMainList();
+            }
         },
     }
 </script>

@@ -110,7 +110,9 @@
                 }
                 if (this.userIsAuthenticated && this.$store.getters.user.roleId == 2){         //roleId == 2 == Customer
                     menuItems = [
+                        {icon: 'mdi-clipboard-list-outline', title: 'Order', link: '/PizzaOrder'},
                         {icon: 'mdi-account', title: 'Profile', link: '/Customer'}
+
                     ]
                 }
                 return menuItems

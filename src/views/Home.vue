@@ -178,7 +178,7 @@
             hideAlert() {
                 window.setInterval(() => {
                     this.alert = false;
-                }, 5000)
+                }, 8000)
             },
             getBasePizzaList() {
                 http
