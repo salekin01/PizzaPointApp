@@ -144,7 +144,7 @@
                             mdi-delete
                         </v-icon>
                     </template>-->
-                    <template v-slot:no-data>
+                    <!--<template v-slot:no-data>
                         <v-btn
                                 elevation="5"
                                 color="success"
@@ -152,7 +152,7 @@
                         >
                             Reset
                         </v-btn>
-                    </template>
+                    </template>-->
                 </v-data-table>
             </div>
         </div>
