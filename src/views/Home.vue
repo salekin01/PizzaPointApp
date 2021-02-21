@@ -19,6 +19,7 @@
                 <v-flex ma-1
                         v-for="(item, index) in basePizzaList"
                         :key="index"
+                        v-model="item.active"
                         sort-by="pizzaId"
                         sortDesc>
                     <v-card class="orange lighten-5">
@@ -38,7 +39,7 @@
                                             <h3>{{item.price}}€</h3>
                                             <v-card-actions>
                                                 <v-col>
-                                                    <v-btn @click="selectBasePizza(item)">   <!-- :color="item.selectBasePizzaBtnColor"-->
+                                                    <v-btn @click="selectBasePizza(item)" :color="item.active">   <!-- -->
                                                         <v-icon center role="img">mdi-plus-thick</v-icon>
                                                     </v-btn>
                                                 </v-col>
@@ -155,9 +156,9 @@
                 },
                 alert: false,
                 message: '',
-                orderPizzaId: '',
-                // selectBasePizzaBtnColor: '',
-                // previouslySelectedBasePizzaIndex: '',
+                orderPizzaId: 0,
+                active: '',
+                previouslySelectedBasePizzaIndex: -1,
             }
         },
         components: {},
@@ -180,7 +181,7 @@
             hideAlert() {
                 window.setInterval(() => {
                     this.alert = false;
-                }, 8000)
+                }, 5000)
             },
             getBasePizzaList() {
                 http
@@ -203,13 +204,13 @@
                 this.SelectedPizza.description = item.description;
                 this.SelectedPizza.quantity = 1;
 
-                // if(this.previouslySelectedBasePizzaIndex > -1 && this.previouslySelectedBasePizzaIndex != this.basePizzaList.indexOf(item)){
-                //     var previousItem = this.basePizzaList[this.previouslySelectedBasePizzaIndex];
-                //     previousItem.selectBasePizzaBtnColor = '';
-                //     Object.assign(this.basePizzaList[this.previouslySelectedBasePizzaIndex], previousItem);
-                // }
-                // item.selectBasePizzaBtnColor = "success";
-                // this.previouslySelectedBasePizzaIndex = this.basePizzaList.indexOf(item);
+                if(this.previouslySelectedBasePizzaIndex > -1 && this.previouslySelectedBasePizzaIndex != this.basePizzaList.indexOf(item)){
+                    var previousItem = this.basePizzaList[this.previouslySelectedBasePizzaIndex];
+                    previousItem.active = '';
+                    Object.assign(this.basePizzaList[this.previouslySelectedBasePizzaIndex], previousItem);
+                }
+                item.active = "success";
+                this.previouslySelectedBasePizzaIndex = this.basePizzaList.indexOf(item);
 
             },
             getBakerIngredientList() {
