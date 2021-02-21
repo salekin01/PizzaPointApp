@@ -2,7 +2,7 @@
     <v-col>
         <div>
             <div>
-                <h4 align="center"> Order List </h4>
+                <h3 align="center"> Order List </h3>
                 <v-data-table
                         :headers="headers"
                         :items="mainList"
@@ -68,14 +68,12 @@
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon
-                                small
                                 class="mr-2"
                                 @click="editItem(item)"
                         >
                             mdi-pencil
                         </v-icon>
                         <v-icon
-                                small
                                 @click="showItem(item)"
                         >
                             mdi-eye-outline
@@ -95,7 +93,7 @@
             <br/>  <!--2nd table-->
 
             <div>
-                <h4 align="center" content="grey darken-1"> Selected Ingredient </h4>
+                <h3 align="center" content="grey darken-1"> Selected Ingredients </h3>
                 <v-data-table
                         :headers="headers1"
                         :items="ingredientListofSpecificPizza"
@@ -122,7 +120,6 @@
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon
-                                small
                                 @click="deleteItem(item)"
                         >
                             mdi-delete

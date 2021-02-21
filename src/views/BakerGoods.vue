@@ -3,7 +3,7 @@
         <v-col>
             <div>
                 <div>
-                    <h4 align="center"> Base Ingredient </h4>
+                    <h3 align="center"> Ingredients in stock </h3>
                     <v-data-table
                             :headers="headers"
                             :items="mainList"
@@ -153,14 +153,12 @@
                         </template>
                         <template v-slot:item.actions="{ item }">
                             <v-icon
-                                    small
                                     class="mr-2"
                                     @click="editItem(item)"
                             >
                                 mdi-pencil
                             </v-icon>
                             <v-icon
-                                    small
                                     @click="deleteItem(item)"
                             >
                                 mdi-delete
@@ -180,7 +178,7 @@
                 <br/>  <!--2nd table-->
 
                 <div>
-                    <h4 align="center" content="grey darken-1"> Restock Ingredient </h4>
+                    <h3 align="center" content="grey darken-1"> Restock ingredients </h3>
                     <v-data-table
                             v-model="selected"
                             :headers="headers1"

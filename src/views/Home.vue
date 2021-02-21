@@ -19,7 +19,8 @@
                 <v-flex ma-1
                         v-for="(item, index) in basePizzaList"
                         :key="index"
-                         >
+                        sort-by="pizzaId"
+                        sortDesc>
                     <v-card class="orange lighten-5">
                         <v-container fluid>
                             <v-layout row>
@@ -30,6 +31,7 @@
                                     <v-card-title primary-title>
                                         <v-flex xs10 sm10 md11 lg11>
                                             <h3 class="Gray--text mb-0">{{item.pizzaName}}</h3>
+                                            <h4 class="Gray--text mb-0">Size: {{item.sizeInText}} ({{item.sizeInInch}} inch)</h4>
                                             <h4 class="Gray--text mb-0">{{item.description}}</h4>
                                         </v-flex>
                                         <v-flex xs2 sm2 md1 lg1 class="text-right">
@@ -136,7 +138,7 @@
                         class: 'subtitle-1 font-weight-black',
                     },
                     {text: 'Regional Province', value: 'regionalProvinceName', class: 'subtitle-1 font-weight-black'},
-                    {text: 'Price', value: 'unitPrice', class: 'subtitle-1 font-weight-black'},
+                    {text: 'Price (€)', value: 'unitPrice', class: 'subtitle-1 font-weight-black'},
                 ],
                 bakerIngredientList: [],
                 basePizzaList: [],

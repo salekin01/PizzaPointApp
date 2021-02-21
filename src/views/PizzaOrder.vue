@@ -2,7 +2,7 @@
     <v-col>
         <div>
             <div>
-                <h4 align="center"> Order List </h4>
+                <h3 align="center"> My orders </h3>
                 <v-data-table
                         :headers="headers"
                         :items="mainList"
@@ -111,7 +111,7 @@
             <br/>  <!--2nd table-->
 
             <div>
-                <h4 align="center" content="grey darken-1"> Selected Ingredient </h4>
+                <h3 align="center" content="grey darken-1"> Selected ingredients </h3>
                 <v-data-table
                         :headers="headers1"
                         :items="ingredientListofSpecificPizza"

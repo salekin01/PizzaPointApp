@@ -140,14 +140,12 @@
             </template>
             <template v-slot:item.actions="{ item }">
                 <v-icon
-                        small
                         class="mr-2"
                         @click="editItem(item)"
                 >
                     mdi-pencil
                 </v-icon>
                 <v-icon
-                        small
                         @click="deleteItem(item)"
                 >
                     mdi-delete
@@ -190,7 +188,7 @@
                 {text: 'Image Url', value: 'imageUrl', class: 'subtitle-2 font-weight-black'},
                 {text: 'Description', value: 'description', class: 'subtitle-2 font-weight-black'},
                 {text: 'Created Date', value: 'createdDate', class: 'subtitle-2 font-weight-black'},
-                {text: 'Updated date', value: 'updated_date', class: 'subtitle-2 font-weight-black'},
+                {text: 'Updated date', value: 'updatedDate', class: 'subtitle-2 font-weight-black'},
                 {text: 'Actions', value: 'actions', sortable: false, class: 'subtitle-2 font-weight-black'},
             ],
             mainList: [],

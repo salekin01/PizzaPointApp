@@ -25,13 +25,14 @@
             </v-app-bar-nav-icon>
 
             <v-toolbar-title>
-                <router-link to="/" tag="span" style="cursor: pointer" > <h2>PizzaPoint</h2></router-link>
+                <router-link to="/" tag="span" style="cursor: pointer" > <h1>PizzaPoint</h1></router-link>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-xs-only">
                 <v-btn text
                        v-for="item in menuItems" :key="item.title"
                        router :to="item.link"
+                       class="text-h6"
                 >
                     <v-icon role="img">{{item.icon}}</v-icon>
                     {{item.title}}
@@ -39,6 +40,7 @@
                 <v-btn text
                        v-if="userIsAuthenticated"
                        @click="onLogout"
+                       class="text-h6"
                 >
                     <v-icon role="img">mdi-exit-to-app</v-icon>
                     Logout
@@ -63,7 +65,7 @@
                         color="white"
                         text
                         rounded
-                        class="my-2"
+                        class="my-2 text-h6"
                 >
                     <v-icon role="img">{{item.icon}}</v-icon>
                     {{item.title}}
