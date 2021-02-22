@@ -501,7 +501,7 @@
             //2nd table methods
             getSupplierList() {
                 http
-                    .get("/supplierGoods")
+                    .get("/supplierGoodsListForBaker")
                     .then(response => {
                         this.supplierIngredientList = response.data; // JSON are parsed automatically.
                         console.log(response.data);
